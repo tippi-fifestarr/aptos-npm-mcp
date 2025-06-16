@@ -24,6 +24,7 @@ The following checklist outlines the steps to create a dapp on the Aptos network
 * Confirm React as the sole frontend framework provider.
 * Choose build tools that integrate well with Aptos (e.g., npm create vite@latest, npx create-next-app@latest).
 * Prefer using TypeScript.
+* Use the official `@aptos-labs/wallet-adapter-react` npm package for wallet connection and transaction signing.
 * Evaluate Aptos npm packages versions for compatibility and up-to-date features.
 
 - User Interface (UI) and User Experience (UX) Design
