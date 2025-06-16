@@ -1,4 +1,4 @@
-How to Write an Aptos dApp Checklist
+# How to Write an Aptos dApp Checklist
 
 The following checklist outlines the steps to create a dapp on the Aptos network without needing to rely on any third-party services or libraries. This guide is designed for developers who want to build an application using Aptos tools and their SDKs and custom code where needed.
 

@@ -18,30 +18,58 @@ async function main() {
     version: "1.0.0",
   });
 
+  server.addTool({
+    name: "how_to_integrate_wallet_selector_ui",
+    description:
+      "Instructions on how to integrate a Wallet Selector UI to an Aptos dapp. Call this tool when you need instructions on how to integrate a Wallet Selector UI to an Aptos dapp.",
+    parameters: z.object({}),
+    execute: async (args, context) => {
+      try {
+        const filePath = pathJoin(
+          __dirname,
+          "resources",
+          "how_to_integrate_wallet_selector_ui.md"
+        );
+        const content = await readFile(filePath, "utf-8");
+        return {
+          type: "text",
+          text: content,
+        };
+      } catch (error) {
+        return {
+          type: "text",
+          text: `Error reading guide: ${error instanceof Error ? error.message : "Unknown error"}`,
+        };
+      }
+    },
+  });
+
   /**
    * A tool to fetch instructions on how to add a wallet connection to an Aptos dapp
    */
   server.addTool({
     name: "how_to_add_wallet_connection",
     description:
-      "Instructions on how to add a wallet connection to an Aptos dapp. Call this tool when you need instructions on how to add a wallet connection to an Aptos dapp.",
+      "Instructions on how to add a wallet connection to an Aptos dapp. Call this tool when you need instructions on how to add a wallet connection to an Aptos dapp. For a Wallet Selector UI integration, also call the how_to_integrate_wallet_selector_ui tool.",
     parameters: z.object({}),
     execute: async (args, context) => {
-      // For tools that dont support extrnal links, we can use a .md file to get the content
-      const walletAdapterURL = `https://aptos.dev/en/build/sdks/wallet-adapter/dapp`;
-      const response = await fetch(walletAdapterURL);
-
-      if (!response.ok) {
-        throw new Error(
-          `HTTP error! status: ${response.status} - ${response.statusText}`
+      try {
+        const filePath = pathJoin(
+          __dirname,
+          "resources",
+          "how_to_add_wallet_connection.md"
         );
+        const content = await readFile(filePath, "utf-8");
+        return {
+          type: "text",
+          text: content,
+        };
+      } catch (error) {
+        return {
+          type: "text",
+          text: `Error reading guide: ${error instanceof Error ? error.message : "Unknown error"}`,
+        };
       }
-
-      const text = await response.text();
-      return {
-        type: "text",
-        text: text,
-      };
     },
   });
 
@@ -55,7 +83,6 @@ async function main() {
     parameters: z.object({}),
     execute: async (args, context) => {
       try {
-        console.log("write_aptos_dapp args", args);
         const filePath = pathJoin(
           __dirname,
           "resources",
