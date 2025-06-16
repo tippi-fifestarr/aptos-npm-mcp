@@ -19,9 +19,35 @@ async function main() {
   });
 
   server.addTool({
+    name: "how_to_sign_and_submit_transaction",
+    description:
+      "Instructions to sign and submit a transaction in an Aptos dApp. Call this tool when you need to sign and submit a transaction to the Aptos network. Use this tool after or along with 'how_to_integrate_wallet_selector_ui' to complete the wallet setup.",
+    parameters: z.object({}),
+    execute: async (args, context) => {
+      try {
+        const filePath = pathJoin(
+          __dirname,
+          "resources",
+          "how_to_sign_and_submit_transaction.md"
+        );
+        const content = await readFile(filePath, "utf-8");
+        return {
+          type: "text",
+          text: content,
+        };
+      } catch (error) {
+        return {
+          type: "text",
+          text: `Error reading guide: ${error instanceof Error ? error.message : "Unknown error"}`,
+        };
+      }
+    },
+  });
+
+  server.addTool({
     name: "how_to_integrate_wallet_selector_ui",
     description:
-      "Instructions on how to integrate a Wallet Selector UI to an Aptos dapp. Call this tool when you need instructions on how to integrate a Wallet Selector UI to an Aptos dapp.",
+      "Instructions to add a Wallet Selector UI in an Aptos dApp. Call this tool when adding wallet support via UI dropdowns, connectors, or modals. Use this tool after or along with 'how_to_add_wallet_connection' to complete the wallet setup.",
     parameters: z.object({}),
     execute: async (args, context) => {
       try {
@@ -50,7 +76,7 @@ async function main() {
   server.addTool({
     name: "how_to_add_wallet_connection",
     description:
-      "Instructions on how to add a wallet connection to an Aptos dapp. Call this tool when you need instructions on how to add a wallet connection to an Aptos dapp. For a Wallet Selector UI integration, also call the how_to_integrate_wallet_selector_ui tool.",
+      "Explains how to implement wallet connection in an Aptos dApp using standard libraries and flows. Call this tool when building or scaffolding a dApp that needs user wallet access. It is a required step for any dApp with account-based interaction.",
     parameters: z.object({}),
     execute: async (args, context) => {
       try {
@@ -83,20 +109,50 @@ async function main() {
     parameters: z.object({}),
     execute: async (args, context) => {
       try {
-        const filePath = pathJoin(
-          __dirname,
-          "resources",
-          "how_to_write_an_aptos_dapp.md"
-        );
-        const content = await readFile(filePath, "utf-8");
+        const basePath = pathJoin(__dirname, "resources");
+
+        const [dappContent, walletConnect, walletUI, signAndSubmitTransaction] =
+          await Promise.all([
+            readFile(
+              pathJoin(basePath, "how_to_write_an_aptos_dapp.md"),
+              "utf-8"
+            ),
+            readFile(
+              pathJoin(basePath, "how_to_add_wallet_connection.md"),
+              "utf-8"
+            ),
+            readFile(
+              pathJoin(basePath, "how_to_integrate_wallet_selector_ui.md"),
+              "utf-8"
+            ),
+            readFile(
+              pathJoin(basePath, "how_to_sign_and_submit_transaction.md"),
+              "utf-8"
+            ),
+          ]);
+
+        const combined = [
+          "# Writing an Aptos dApp\n\n",
+          dappContent,
+          "\n\n---\n\n",
+          "# Adding Wallet Connection\n\n",
+          walletConnect,
+          "\n\n---\n\n",
+          "# Integrating Wallet Selector UI\n\n",
+          walletUI,
+          "\n\n---\n\n",
+          "# Signing and Submitting a Transaction\n\n",
+          signAndSubmitTransaction,
+        ].join("");
+
         return {
           type: "text",
-          text: content,
+          text: combined,
         };
       } catch (error) {
         return {
           type: "text",
-          text: `Error reading guide: ${error instanceof Error ? error.message : "Unknown error"}`,
+          text: `Error reading one of the guides: ${error instanceof Error ? error.message : "Unknown error"}`,
         };
       }
     },
