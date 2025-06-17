@@ -105,54 +105,24 @@ async function main() {
   server.addTool({
     name: "write_aptos_dapp",
     description:
-      "Generates step-by-step instructions for writing an Aptos dApp. Call this tool when you need a checklist of tasks such as setting up your Aptos account, creating a new app, and configuring settings. Call this tool when the user asks for Aptos Build MCP. For wallet connection instructions, also call the how_to_add_wallet_connection tool.",
+      "Generates step-by-step instructions for writing an Aptos dApp. Call this tool when you need a checklist of tasks such as setting up your Aptos account, creating a new app, and configuring settings. Call this tool when the user asks for Aptos Build MCP. For wallet connection instructions, also call the how_to_add_wallet_connection tool. For admin account instructions, also call the how_to_configure_admin_account tool.",
     parameters: z.object({}),
     execute: async (args, context) => {
       try {
-        const basePath = pathJoin(__dirname, "resources");
-
-        const [dappContent, walletConnect, walletUI, signAndSubmitTransaction] =
-          await Promise.all([
-            readFile(
-              pathJoin(basePath, "how_to_write_an_aptos_dapp.md"),
-              "utf-8"
-            ),
-            readFile(
-              pathJoin(basePath, "how_to_add_wallet_connection.md"),
-              "utf-8"
-            ),
-            readFile(
-              pathJoin(basePath, "how_to_integrate_wallet_selector_ui.md"),
-              "utf-8"
-            ),
-            readFile(
-              pathJoin(basePath, "how_to_sign_and_submit_transaction.md"),
-              "utf-8"
-            ),
-          ]);
-
-        const combined = [
-          "# Writing an Aptos dApp\n\n",
-          dappContent,
-          "\n\n---\n\n",
-          "# Adding Wallet Connection\n\n",
-          walletConnect,
-          "\n\n---\n\n",
-          "# Integrating Wallet Selector UI\n\n",
-          walletUI,
-          "\n\n---\n\n",
-          "# Signing and Submitting a Transaction\n\n",
-          signAndSubmitTransaction,
-        ].join("");
-
+        const filePath = pathJoin(
+          __dirname,
+          "resources",
+          "how_to_write_an_aptos_dapp.md"
+        );
+        const content = await readFile(filePath, "utf-8");
         return {
           type: "text",
-          text: combined,
+          text: content,
         };
       } catch (error) {
         return {
           type: "text",
-          text: `Error reading one of the guides: ${error instanceof Error ? error.message : "Unknown error"}`,
+          text: `Error reading guide: ${error instanceof Error ? error.message : "Unknown error"}`,
         };
       }
     },
