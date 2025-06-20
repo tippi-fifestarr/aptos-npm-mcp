@@ -14,7 +14,7 @@ npm install @aptos-labs/wallet-adapter-react
 
 ```jsx
 import { AptosWalletAdapterProvider } from "@aptos-labs/wallet-adapter-react";
-import { PropsWithChildren } from "react";
+import { type PropsWithChildren } from "react";
 import { Network } from "@aptos-labs/ts-sdk";
 
 export const WalletProvider = ({ children }: PropsWithChildren) => {
@@ -41,3 +41,7 @@ import { useWallet } from "@aptos-labs/wallet-adapter-react";
 // Access fields / functions from the adapter
 const { account, connected, wallet, changeNetwork } = useWallet();
 ```
+
+3. Integrate a Wallet Selector UI
+
+See the [how_to_integrate_wallet_selector_ui .md file](./how_to_integrate_wallet_selector_ui.md)

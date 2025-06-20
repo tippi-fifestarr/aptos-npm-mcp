@@ -1,8 +1,9 @@
 /// <reference types="node" />
 import { FastMCP } from "fastmcp";
-import { join as pathJoin, dirname } from "path";
+import { join as pathJoin, dirname, extname, basename } from "path";
 import { fileURLToPath } from "url";
 import { readFile } from "fs/promises";
+import * as fs from "fs";
 import { z } from "zod";
 
 // Get __dirname equivalent in ES modules
@@ -18,94 +19,13 @@ async function main() {
     version: "1.0.0",
   });
 
-  server.addTool({
-    name: "how_to_sign_and_submit_transaction",
-    description:
-      "Instructions to sign and submit a transaction in an Aptos dApp. Call this tool when you need to sign and submit a transaction to the Aptos network. Use this tool after or along with 'how_to_integrate_wallet_selector_ui' to complete the wallet setup.",
-    parameters: z.object({}),
-    execute: async (args, context) => {
-      try {
-        const filePath = pathJoin(
-          __dirname,
-          "resources",
-          "how_to_sign_and_submit_transaction.md"
-        );
-        const content = await readFile(filePath, "utf-8");
-        return {
-          type: "text",
-          text: content,
-        };
-      } catch (error) {
-        return {
-          type: "text",
-          text: `Error reading guide: ${error instanceof Error ? error.message : "Unknown error"}`,
-        };
-      }
-    },
-  });
-
-  server.addTool({
-    name: "how_to_integrate_wallet_selector_ui",
-    description:
-      "Instructions to add a Wallet Selector UI in an Aptos dApp. Call this tool when adding wallet support via UI dropdowns, connectors, or modals. Use this tool after or along with 'how_to_add_wallet_connection' to complete the wallet setup.",
-    parameters: z.object({}),
-    execute: async (args, context) => {
-      try {
-        const filePath = pathJoin(
-          __dirname,
-          "resources",
-          "how_to_integrate_wallet_selector_ui.md"
-        );
-        const content = await readFile(filePath, "utf-8");
-        return {
-          type: "text",
-          text: content,
-        };
-      } catch (error) {
-        return {
-          type: "text",
-          text: `Error reading guide: ${error instanceof Error ? error.message : "Unknown error"}`,
-        };
-      }
-    },
-  });
-
-  /**
-   * A tool to fetch instructions on how to add a wallet connection to an Aptos dapp
-   */
-  server.addTool({
-    name: "how_to_add_wallet_connection",
-    description:
-      "Explains how to implement wallet connection in an Aptos dApp using standard libraries and flows. Call this tool when building or scaffolding a dApp that needs user wallet access. It is a required step for any dApp with account-based interaction.",
-    parameters: z.object({}),
-    execute: async (args, context) => {
-      try {
-        const filePath = pathJoin(
-          __dirname,
-          "resources",
-          "how_to_add_wallet_connection.md"
-        );
-        const content = await readFile(filePath, "utf-8");
-        return {
-          type: "text",
-          text: content,
-        };
-      } catch (error) {
-        return {
-          type: "text",
-          text: `Error reading guide: ${error instanceof Error ? error.message : "Unknown error"}`,
-        };
-      }
-    },
-  });
-
   /**
    * A tool to generate step-by-step instructions .md file for writing an Aptos dApp
    */
   server.addTool({
     name: "write_aptos_dapp",
     description:
-      "Generates step-by-step instructions for writing an Aptos dApp. Call this tool when you need a checklist of tasks such as setting up your Aptos account, creating a new app, and configuring settings. Call this tool when the user asks for Aptos Build MCP. For wallet connection instructions, also call the how_to_add_wallet_connection tool. For admin account instructions, also call the how_to_configure_admin_account tool.",
+      "Generates step-by-step instructions for writing an Aptos dApp. Call this tool when you need a checklist of tasks such as setting up your Aptos account, creating a new app, and configuring settings. Call this tool when the user asks for Aptos Build MCP. For conceptual guides, best practices, and how-tos, also call the read_aptos_resources tool.",
     parameters: z.object({}),
     execute: async (args, context) => {
       try {
@@ -125,6 +45,59 @@ async function main() {
           text: `Error reading guide: ${error instanceof Error ? error.message : "Unknown error"}`,
         };
       }
+    },
+  });
+
+  // Tool: "read_aptos_resources" (fetch Aptos conceptual guides and how-to documentation from markdown files)
+  // Dynamically generate available resource names based on markdown files in the resources directory and languages subdirectory
+  const resourcesDir = pathJoin(__dirname, "resources");
+
+  const aptosResourceOptions: string[] = (() => {
+    try {
+      // Markdown files in resources directory
+      const files = fs.readdirSync(resourcesDir);
+      const markdownFiles = files
+        .filter((file: string) =>
+          fs.statSync(pathJoin(resourcesDir, file)).isFile()
+        )
+        .filter((file: string) => extname(file).toLowerCase() === ".md")
+        .map((file: string) => basename(file, extname(file)));
+      return [...markdownFiles];
+    } catch (err) {
+      console.error(`Error reading resources directories: ${err}`);
+      return [];
+    }
+  })();
+
+  server.addTool({
+    name: "create_aptos_resources",
+    description:
+      "Retrieves Aptos conceptual guides and how-to documentation from markdown files in the resources directory. Call this tool for overviews, integration instructions, best practices, and troubleshooting tips. Returns documentation in markdown format. For detailed API reference and SDK code samples, also call the read_pubnub_sdk_docs tool.",
+    parameters: z.object({
+      document: z
+        .string()
+        .refine((value) => aptosResourceOptions.includes(value), {
+          message: "Invalid resource name",
+        })
+        .describe(
+          "Resource name to fetch (file name without .md under resources directory, e.g., how_to_add_wallet_connection, how_to_integrate_wallet_selector_ui, how_to_configure_admin_account), etc."
+        ),
+    }),
+    execute: async ({ document }, context) => {
+      const resourcesDir = pathJoin(__dirname, "resources");
+      let filePath = pathJoin(resourcesDir, `${document}.md`);
+      if (!fs.existsSync(filePath)) {
+        return {
+          type: "text",
+          text: `Documentation file not found: ${document}.md`,
+        };
+      }
+
+      const content = await readFile(filePath, "utf-8");
+      return {
+        type: "text",
+        text: content,
+      };
     },
   });
 

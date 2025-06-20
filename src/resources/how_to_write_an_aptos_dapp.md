@@ -4,39 +4,67 @@ The following checklist outlines the steps to create a dapp on the Aptos network
 
 - Dapp Configurations Selection
 
-* Choose the Aptos network (devnet / testnet / mainnet) to work with.
-* Choose whether to provide a known admin account private key or generate a new one.
-  - This account will be used to later publish a samrt contract, if exists.
+* Configure the Aptos network (devnet / testnet / mainnet) to work with.
+* Configure an Admin Account for smart contract publishing.
 * Use environment variables to store the dapp configuration.
 
 - Project folder structure
 
-* In the root folder, generate the project setup based on the chosen framework.
-* In the project folder, rename the `src` folder in the project folder to `frontend`, and make sure to modify all relevante references.
+* In the `project folder`, rename the `src` folder in the project folder to `frontend`, and make sure to modify all relevante references.
   - Use the `frontend` folder as the place to hold all of the project frontend code.
-* In the project folder, create a `contract` folder.
+* In the `project folder`, create a `contract` folder.
   - Use the `contract` folder as the place to hold all of the project Move contract code.
   - Generate the relevant Move smart contract files in the `contract` folder, such as the `Move.toml` file, `sources` folder.
   - Implement any relevant smart contract code.
+* A minimal dapp folder structure should look like
 
-- Technology Stack Selection
+```
+├── project-folder/
+│   ├── frontend/               # The folder that holds all of the project frontend code.
+│   ├── contract/               # The folder that holds all of the project Move contract code.
+|   ├── .env                    # Dapp configurations file
+|   ├── package.json
+```
+
+- Move Smart Contract
+
+* All of the project Move contract code should live in a `contract` folder.
+* At the minimum, the `contract` folder should have `Move.toml` file and a `sources` folder.
+  - `Move.toml` file is the configuration of the Move project.
+  - `sources` folder holds all the Move modules.
+* Write unit tests for your Move module.
+* Preffer using the `Aptos Move 2` syntax.
+
+- Frontend Technology Stack
 
 * Confirm React as the sole frontend framework provider.
-* Choose build tools that integrate well with Aptos (e.g., npm create vite@latest, npx create-next-app@latest).
+* Choose build tools that integrate well with Aptos (e.g., npm create vite@latest (preffered), npx create-next-app@latest).
 * Prefer using TypeScript.
+* Always use `@latest` when installing Aptos npm packages.
+* Evaluate Aptos npm packages versions for compatibility and up-to-date features.
+
+- Wallet Connection
+
+* Always use `@latest` when installing Aptos npm packages.
 * Use the official `@aptos-labs/wallet-adapter-react` npm package for wallet connection and transaction signing.
+* Preffered to use the Aptos official Wallet Selector package.
 * Evaluate Aptos npm packages versions for compatibility and up-to-date features.
 
 - User Interface (UI) and User Experience (UX) Design
 
 * Define design guidelines and layout, emphasizing a seamless real-time experience (e.g., wallet selector modal).
 * Plan for handling disconnections or wallet errors gracefully in the UI.
+* Plan for handling user indication for transaction execution and failures in the UI.
 
-<!-- TODO -->
+- Dapp Deployment
 
-- Deployment
+* Publish the Move smart contract to the Aptos blockchain following the [how_to_publish_move_smart_contract](./how_to_publish_move_smart_contract.md)
+* Deploy the frontend code to a reliable platform like `Vercel`.
+  - Follow the platform best practices on how to deploy the dapp.
+  - Preffer use terminal commands if available.
 
 <!-- * Aptos Build Account Setup and API Key Configuration
+
 - Create a Build account:
   - Go to Aptos Build's official website and sign up with a valid email address.
   - Verify your account if prompted, and log in to the Build dashboard.
@@ -49,7 +77,7 @@ The following checklist outlines the steps to create a dapp on the Aptos network
   - Select the Aptos network (devnet, testnet, mainnet) you intend to use the API Key with.
   - Provide a descriptive name for your API Key to easily identify it later.
   - Enable the Client usage option.
-  – Obtain the Node API for both development and production environments.
+    – Obtain the Node API for both development and production environments.
 - Store and manage your keys securely:
   – Do not embed API keys in publicly visible repositories.
   – Use environment variables or secure configuration management to protect your credentials. -->

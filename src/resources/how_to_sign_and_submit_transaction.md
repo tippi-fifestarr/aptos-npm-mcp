@@ -9,7 +9,10 @@ This method will use the current connected wallet to sign and submit transaction
 
 ```jsx
 import React from "react";
-import { useWallet } from "@aptos-labs/wallet-adapter-react";
+import {
+  useWallet,
+  type InputTransactionData,
+} from "@aptos-labs/wallet-adapter-react";
 import { Aptos, AptosConfig, Network } from "@aptos-labs/ts-sdk";
 
 const config = new AptosConfig({ network: Network.MAINNET });
@@ -22,13 +25,16 @@ const SignAndSubmit = () => {
     if (account == null) {
       throw new Error("Unable to find account to sign transaction");
     }
-    const response = await signAndSubmitTransaction({
-      sender: account.address,
+
+    const transaction: InputTransactionData = {
       data: {
         function: "<module_address>::<module_name>::<function_name>",
         functionArguments: [<function_arguments>],
       },
-    });
+    };
+
+    const response = await signAndSubmitTransaction(transaction);
+
     // if you want to wait for transaction
     try {
       await aptos.waitForTransaction({ transactionHash: response.hash });
