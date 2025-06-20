@@ -7,11 +7,7 @@ The admin account for a dapp on Aptos, is used to publish the Move contract to t
 1. Import the `Account` module from the '@aptos-labs/ts-sdk' package, and use it to generate a new keypair.
 
 ```
-import { Account } from '@aptos-labs/ts-sdk';
-
-const adminAccount = Account.generate();
-
-return {privateKey: adminAccount.privateKey.toString(), accountAddress: adminAccount.accountAddress.toString()};
+aptos move init --network <dapp-network>
 ```
 
 2. Store the private key and the account address
