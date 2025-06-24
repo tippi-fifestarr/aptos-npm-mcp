@@ -32,8 +32,8 @@ The following checklist outlines the steps to create a dapp on the Aptos network
 * At the minimum, the `contract` folder should have `Move.toml` file and a `sources` folder.
   - `Move.toml` file is the configuration of the Move project.
   - `sources` folder holds all the Move modules.
-* Write unit tests for your Move module.
-* Preffer using the `Aptos Move 2` syntax.
+* Make sure to write unit tests for the Move module.
+* Make sure to always add the `build/` folder in the `.gitignore` file
 
 - Frontend Technology Stack
 
@@ -47,6 +47,8 @@ The following checklist outlines the steps to create a dapp on the Aptos network
 
 * Always use `@latest` when installing Aptos npm packages.
 * Use the official `@aptos-labs/wallet-adapter-react` npm package for wallet connection and transaction signing.
+  - Use the latest implementation following the Aptos Wallet Standard
+  - Never use other non-aptos wallet adapter plugins packages
 * Preffered to use the Aptos official Wallet Selector package.
 * Evaluate Aptos npm packages versions for compatibility and up-to-date features.
 
@@ -58,7 +60,8 @@ The following checklist outlines the steps to create a dapp on the Aptos network
 
 - Dapp Deployment
 
-* Publish the Move smart contract to the Aptos blockchain following the [how_to_publish_move_smart_contract](./how_to_publish_move_smart_contract.md)
+* Publish the Move smart contract to the Aptos blockchain.
+* Modify the front end code to interact with the deployed contract address.
 * Deploy the frontend code to a reliable platform like `Vercel`.
   - Follow the platform best practices on how to deploy the dapp.
   - Preffer use terminal commands if available.
