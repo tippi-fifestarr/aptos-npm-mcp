@@ -4,18 +4,13 @@ The following doc outlines the guidelines on how to set up and manage a smart co
 
 ### Create Package
 
-1. Initialize a Move package by running:
-
-```bash
-aptos move init --name <PROJECT_NAME>
-```
+1. Make sure you have the correct Move package folder structure
 
 project-folder/
 ├── contract/
-│ ├── sources
-│ ├── scripts
-│ ├── tests
+│ ├── sources // all Move modules should live here
 │ ├── Move.toml
+│ ├── .gitignore // put files and folder to ignore like build/
 
 2. Update Move.toml
 
@@ -35,6 +30,8 @@ git = "https://github.com/aptos-labs/aptos-framework.git"
 rev = "mainnet"
 subdir = "aptos-framework"
 ```
+
+3. Write your Move smart contract modules
 
 ### Compiling
 

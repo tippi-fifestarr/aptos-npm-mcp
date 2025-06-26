@@ -15,7 +15,7 @@ If wallet is already connected, the button would display the connected account a
 Make sure you have `@aptos-labs/wallet-adapter-react` installed
 
 ```bash
-npm install @aptos-labs/wallet-adapter-ant-design
+npm install @aptos-labs/wallet-adapter-ant-design@latest
 ```
 
 on `index.tsx / _app.tsx` import the ant-design package `.css` file as

@@ -14,12 +14,12 @@ That should output something like
 aptos 7.2.0
 ```
 
-2. Run the `create-object-and-publish-package` command:
+2. Run the `deploy-object` command:
 
 Note: might need to use some more command options to successfully publish to chain.
 
 ```bash
-aptos move create-object-and-publish-package --address-name <address-name-from-move.toml-file> --named-addresses <address-name-from-move.toml-file>=<account-address-hex-string> --assume-yes
+aptos move deploy-object --address-name <address-name-from-move.toml-file>  --assume-yes
 ```
 
 3. Store the object address output

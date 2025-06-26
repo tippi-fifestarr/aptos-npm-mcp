@@ -7,7 +7,7 @@ This provides a standard interface for using all Aptos wallets, and allows new w
 1. Install `@aptos-labs/wallet-adapter-react`.
 
 ```bash
-npm install @aptos-labs/wallet-adapter-react
+npm install @aptos-labs/wallet-adapter-react@latest
 ```
 
 2. Initialize the `AptosWalletAdapterProvider`.

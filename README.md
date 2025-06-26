@@ -1,5 +1,47 @@
 # Aptos NPM MCP
 
+## Usage
+
+1. Clone this MCP repo
+
+```bash
+git clone git@github.com:aptos-labs/aptos-npm-mcp.git
+```
+
+2. Link the MCP to your project
+
+   1. Open the Cursor IDE
+   2. On the project root folder, create a `.cursor` folder
+   3. In the `.cursor` folder, create a `mcp.json` file
+   4. paste this content
+
+      ```json
+      {
+        "mcpServers": {
+          "aptos-build-mcp": {
+            "command": "npx",
+            "args": ["tsx", "<path-to-mcp-server>/src/server.ts"],
+            "type": "stdio"
+          }
+        }
+      }
+      ```
+
+   5. Make sure to update the `args` to point to the cloned MCP folder from the previous step
+
+3. Verify Cursor runs your MCP
+   1. Open Cursor Setting: `cursor -> setting -> cursor setting`
+   2. Head to the `MCP` section
+   3. Make sure it is enabled and showing a green color indicator
+   4. Click the “refresh” icon to update the MCP
+4. Start vibe coding.
+
+   1. Make sure the Cursor AI window dropdown is set to `Agent` and `claude-4-sonnet`
+
+   2. Prompt the agent with something like
+      1. “build a <whatever> dapp on Aptos”
+      2. “Build a frontend of a <whatever> dapp on Aptos”
+
 ## Development
 
 To get started, clone the repository and install the dependencies.
@@ -14,8 +56,8 @@ npm install
 {
   "mcpServers": {
     "aptos-build-mcp": {
-      "command": "node",
-      "args": ["<path-to-mcp-server>/dist/server.js"],
+      "command": "npx",
+      "args": ["tsx", "<path-to-mcp-server>/src/server.ts"],
       "type": "stdio"
     }
   }
