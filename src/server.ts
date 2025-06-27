@@ -16,7 +16,7 @@ async function main() {
    */
   const server = new FastMCP({
     name: "Aptos Build MCP",
-    version: "0.0.5",
+    version: "0.0.7",
   });
 
   server.addTool({
@@ -31,37 +31,6 @@ async function main() {
     },
   });
 
-  /**
-   * A tool to generate step-by-step instructions .md file for writing an Aptos dApp
-   */
-  server.addTool({
-    name: "write_aptos_dapp",
-    description:
-      "Generates step-by-step instructions for writing an Aptos dApp. Call this tool when you need a checklist of tasks such as setting up your Aptos account, creating a new app, and configuring settings. Call this tool when the user asks for Aptos Build MCP. For conceptual guides, best practices, and how-tos, also call the read_aptos_resources tool.",
-    parameters: z.object({}),
-    execute: async (args, context) => {
-      try {
-        const filePath = pathJoin(
-          __dirname,
-          "resources",
-          "how_to_write_an_aptos_dapp.md"
-        );
-        const content = await readFile(filePath, "utf-8");
-        return {
-          type: "text",
-          text: content,
-        };
-      } catch (error) {
-        return {
-          type: "text",
-          text: `Error reading guide: ${error instanceof Error ? error.message : "Unknown error"}`,
-        };
-      }
-    },
-  });
-
-  // Tool: "read_aptos_resources" (fetch Aptos conceptual guides and how-to documentation from markdown files)
-  // Dynamically generate available resource names based on markdown files in the resources directory and languages subdirectory
   const resourcesDir = pathJoin(__dirname, "resources");
 
   const aptosResourceOptions: string[] = (() => {
@@ -81,7 +50,6 @@ async function main() {
     }
   })();
 
-  // Enhanced tool that can intelligently find and retrieve relevant Aptos resources
   server.addTool({
     name: "get_aptos_development_resources",
     description:
@@ -149,6 +117,17 @@ async function main() {
           "how_to_write_a_move_smart_contract",
           "how_to_develop_smart_contract",
           "how_to_deploy_smart_contrac",
+        ],
+        dapp: [
+          "how_to_configure_admin_account",
+          "how_to_fund_an_account_on_aptos",
+          "how_to_write_an_aptos_dapp",
+          "how_to_write_a_move_smart_contract",
+          "how_to_develop_smart_contract",
+          "how_to_deploy_smart_contract",
+          "how_to_add_wallet_connection",
+          "how_to_integrate_wallet_selector_ui",
+          "how_to_sign_and_submit_transaction",
         ],
         wallet: [
           "how_to_add_wallet_connection",
@@ -223,38 +202,6 @@ async function main() {
       };
     },
   });
-
-  // Keep the original tool for backward compatibility, but mark it as deprecated
-  // server.addTool({
-  //   name: "create_aptos_resources",
-  //   description:
-  //     "DEPRECATED: Use 'get_aptos_development_resources' instead. Retrieves specific Aptos documentation by exact filename.",
-  //   parameters: z.object({
-  //     document: z
-  //       .string()
-  //       .refine((value) => aptosResourceOptions.includes(value), {
-  //         message: "Invalid resource name",
-  //       })
-  //       .describe("Resource name to fetch (file name without .md)"),
-  //   }),
-  //   execute: async ({ document }, context) => {
-  //     const resourcesDir = pathJoin(__dirname, "resources");
-  //     const filePath = pathJoin(resourcesDir, `${document}.md`);
-
-  //     if (!fs.existsSync(filePath)) {
-  //       return {
-  //         type: "text",
-  //         text: `Documentation file not found: ${document}.md`,
-  //       };
-  //     }
-
-  //     const content = await readFile(filePath, "utf-8");
-  //     return {
-  //       type: "text",
-  //       text: content,
-  //     };
-  //   },
-  // });
 
   /**
    * Start the server
