@@ -14,6 +14,7 @@ The following doc outlines the best practices and guidelines to follow when writ
 ### Unit tests
 
 - Make sure to write unit tests for the Move module.
+-
 
 ### Error Codes
 

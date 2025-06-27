@@ -19,6 +19,64 @@ async function main() {
     version: "0.0.7",
   });
 
+  const resourcesDir = pathJoin(__dirname, "resources");
+
+  /**
+   * Helper function to read all markdown files from a directory
+   */
+  async function readAllMarkdownFromDirectory(
+    dirPath: string
+  ): Promise<string> {
+    let content = "";
+
+    try {
+      if (!fs.existsSync(dirPath)) {
+        return `Directory not found: ${dirPath}`;
+      }
+
+      const files = fs.readdirSync(dirPath);
+      const markdownFiles = files.filter(
+        (file: string) => extname(file).toLowerCase() === ".md"
+      );
+
+      for (const file of markdownFiles) {
+        const filePath = pathJoin(dirPath, file);
+        try {
+          const fileContent = await readFile(filePath, "utf-8");
+          content += fileContent + "\n\n---\n\n";
+        } catch (error) {
+          console.error(`Error reading file ${filePath}:`, error);
+          content += `Error reading file: ${file}\n\n---\n\n`;
+        }
+      }
+
+      return content;
+    } catch (error) {
+      console.error(`Error reading directory ${dirPath}:`, error);
+      return `Error reading directory: ${dirPath}`;
+    }
+  }
+
+  /**
+   * Helper function to read all markdown files from multiple directories
+   */
+  async function readAllMarkdownFromDirectories(
+    dirNames: string[]
+  ): Promise<string> {
+    let combinedContent = "";
+
+    for (const dirName of dirNames) {
+      const dirPath = pathJoin(resourcesDir, dirName);
+      const dirContent = await readAllMarkdownFromDirectory(dirPath);
+      if (dirContent.trim()) {
+        combinedContent += `# ${dirName.toUpperCase()} RESOURCES\n\n`;
+        combinedContent += dirContent;
+      }
+    }
+
+    return combinedContent;
+  }
+
   server.addTool({
     name: "get_mcp_version",
     description: "Returns the version of the MCP server",
@@ -31,175 +89,71 @@ async function main() {
     },
   });
 
-  const resourcesDir = pathJoin(__dirname, "resources");
-
-  const aptosResourceOptions: string[] = (() => {
-    try {
-      // Markdown files in resources directory
-      const files = fs.readdirSync(resourcesDir);
-      const markdownFiles = files
-        .filter((file: string) =>
-          fs.statSync(pathJoin(resourcesDir, file)).isFile()
-        )
-        .filter((file: string) => extname(file).toLowerCase() === ".md")
-        .map((file: string) => basename(file, extname(file)));
-      return [...markdownFiles];
-    } catch (err) {
-      console.error(`Error reading resources directories: ${err}`);
-      return [];
-    }
-  })();
-
   server.addTool({
-    name: "get_aptos_development_resources",
+    name: "build_smart_contract_on_aptos",
     description:
-      "Intelligently retrieves relevant Aptos development resources based on the development context or specific needs. This tool can find documentation for smart contract development, frontend integration, wallet connection, deployment, and more. Use this when you need guidance on any aspect of Aptos dApp development - the tool will automatically identify and return the most relevant resources.",
-    parameters: z.object({
-      context: z
-        .string()
-        .optional()
-        .describe(
-          "The development context or what you're trying to accomplish (e.g., 'setting up smart contracts', 'wallet integration', 'deployment', 'full dapp development', 'move contract testing', etc.). If not provided, returns available resources overview."
-        ),
-      specific_resource: z
-        .string()
-        .optional()
-        .describe(
-          "If you know the exact resource name, specify it here (without .md extension)"
-        ),
-    }),
-    execute: async ({ context, specific_resource }, serverContext) => {
-      const resourcesDir = pathJoin(__dirname, "resources");
-
-      // If specific resource is requested, return it directly
-      if (specific_resource) {
-        const filePath = pathJoin(resourcesDir, `${specific_resource}.md`);
-        if (fs.existsSync(filePath)) {
-          const content = await readFile(filePath, "utf-8");
-          return {
-            type: "text",
-            text: content,
-          };
-        } else {
-          return {
-            type: "text",
-            text: `Resource '${specific_resource}' not found. Available resources: ${aptosResourceOptions.join(", ")}`,
-          };
-        }
-      }
-
-      // If no context provided, return overview of available resources
-      if (!context) {
-        const resourcesList = aptosResourceOptions
-          .map((resource) => {
-            return `- ${resource.replace(/_/g, " ").replace(/^how to /, "")}`;
-          })
-          .join("\n");
-
-        return {
-          type: "text",
-          text: `# Available Aptos Development Resources\n\nThe following resources are available to help with Aptos dApp development:\n\n${resourcesList}\n\nTo get specific guidance, describe what you're trying to accomplish (e.g., "smart contract development", "wallet integration", "full dapp setup").`,
-        };
-      }
-
-      // Intelligent resource matching based on context
-      const contextLower = context.toLowerCase();
-      const relevantResources: string[] = [];
-
-      // Define context-to-resource mappings
-      const contextMappings = {
-        move: [
-          "how_to_write_a_move_smart_contract",
-          "how_to_develop_smart_contract",
-          "how_to_deploy_smart_contract",
-        ],
-        contract: [
-          "how_to_write_a_move_smart_contract",
-          "how_to_develop_smart_contract",
-          "how_to_deploy_smart_contrac",
-        ],
-        dapp: [
-          "how_to_configure_admin_account",
-          "how_to_fund_an_account_on_aptos",
-          "how_to_write_an_aptos_dapp",
-          "how_to_write_a_move_smart_contract",
-          "how_to_develop_smart_contract",
-          "how_to_deploy_smart_contract",
-          "how_to_add_wallet_connection",
-          "how_to_integrate_wallet_selector_ui",
-          "how_to_sign_and_submit_transaction",
-        ],
-        wallet: [
-          "how_to_add_wallet_connection",
-          "how_to_integrate_wallet_selector_ui",
-        ],
-        frontend: [
-          "how_to_add_wallet_connection",
-          "how_to_integrate_wallet_selector_ui",
-          "how_to_sign_and_submit_transaction",
-        ],
-        ui: [
-          "how_to_integrate_wallet_selector_ui",
-          "how_to_add_wallet_connection",
-        ],
-        transaction: ["how_to_sign_and_submit_transaction"],
-        account: [
-          "how_to_configure_admin_account",
-          "how_to_fund_an_account_on_aptos",
-        ],
-        deploy: [
-          "how_to_publish_move_smart_contract",
-          "how_to_deploy_smart_contrac",
-        ],
-        publish: [
-          "how_to_publish_move_smart_contract",
-          "how_to_deploy_smart_contrac",
-        ],
-        fund: ["how_to_fund_an_account_on_aptos"],
-        admin: ["how_to_configure_admin_account"],
-        full: ["how_to_write_an_aptos_dapp"], // For full dapp development
-        complete: ["how_to_write_an_aptos_dapp"],
-        setup: ["how_to_write_an_aptos_dapp", "how_to_configure_admin_account"],
-        "getting started": ["how_to_write_an_aptos_dapp"],
-        overview: ["how_to_write_an_aptos_dapp"],
-      };
-
-      // Find matching resources based on context
-      for (const [keyword, resources] of Object.entries(contextMappings)) {
-        if (contextLower.includes(keyword)) {
-          relevantResources.push(...resources);
-        }
-      }
-
-      // Remove duplicates and ensure resources exist
-      const uniqueResources = [...new Set(relevantResources)].filter(
-        (resource) => aptosResourceOptions.includes(resource)
-      );
-
-      // If no specific matches, default to the main guide
-      if (uniqueResources.length === 0) {
-        uniqueResources.push("how_to_write_an_aptos_dapp");
-      }
-
-      // Read and combine the relevant resources
-      let combinedContent = `# Aptos Development Resources for: ${context}\n\n`;
-
-      for (const resource of uniqueResources) {
-        const filePath = pathJoin(resourcesDir, `${resource}.md`);
-        if (fs.existsSync(filePath)) {
-          const content = await readFile(filePath, "utf-8");
-          combinedContent += `## ${resource
-            .replace(/_/g, " ")
-            .replace(/^how to /, "")
-            .toUpperCase()}\n\n`;
-          combinedContent += content + "\n\n---\n\n";
-        }
-      }
+      "Build an Aptos smart contract - returns all resources from move and management directories",
+    parameters: z.object({}),
+    execute: async (args, context) => {
+      const content = await readAllMarkdownFromDirectories([
+        "management",
+        "move",
+      ]);
 
       return {
         type: "text",
-        text: combinedContent,
+        text: content || "No content found in management and move directories.",
       };
+    },
+  });
+
+  server.addTool({
+    name: "build_ui_frontend_on_aptos",
+    description:
+      "Build a UI frontend for Aptos dApp - returns all resources from frontend directory",
+    parameters: z.object({}),
+    execute: async (args, context) => {
+      const content = await readAllMarkdownFromDirectories(["frontend"]);
+
+      return {
+        type: "text",
+        text: content || "No content found in frontend directory.",
+      };
+    },
+  });
+
+  server.addTool({
+    name: "build_dapp_on_aptos",
+    description:
+      "Build a complete full-stack Aptos dApp - returns all resources from move, management, and frontend directories",
+    parameters: z.object({}),
+    execute: async (args, context) => {
+      const content = await readAllMarkdownFromDirectories([
+        "management",
+        "move",
+        "frontend",
+      ]);
+
+      return {
+        type: "text",
+        text:
+          content ||
+          "No content found in management, move, and frontend directories.",
+      };
+    },
+  });
+
+  server.addPrompt({
+    name: "build_dapp_on_aptos",
+    description: "Build a complete full-stack Aptos dApp",
+    load: async (args) => {
+      return `You are a helpful assistant that can help with building a full-stack Aptos dApp.
+      Before starting the build process, please ask the user to provide the following information:
+
+    1. What network would you like to use? Options are:
+      - devnet
+      - testnet
+      - mainnet`;
     },
   });
 
