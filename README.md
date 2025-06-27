@@ -47,8 +47,9 @@ git clone git@github.com:aptos-labs/aptos-npm-mcp.git
 
 
    4. Prompt the agent with something like
-      1. “build a <whatever> dapp on Aptos”
-      2. “Build a frontend of a <whatever> dapp on Aptos”
+      1. build a < whatever > dapp on Aptos
+      2. Build a frontend of a < whatever > dapp on Aptos
+      3. Write a smart contract for < whatever > on Aptos
 
 ## Development
 
