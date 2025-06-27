@@ -11,6 +11,10 @@ The following doc outlines the best practices and guidelines to follow when writ
   - For any token related implementation, use the `Aptos Digital Asset (DA) Standard`
   - For any resource, that should be easily modified, use the Aptos `Object`
 
+### Unit tests
+
+- Make sure to write unit tests for the Move module.
+
 ### Error Codes
 
 - Each error code must be documented with triple slash comments (///) above its definition

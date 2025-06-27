@@ -5,6 +5,10 @@ This method will use the current connected wallet to sign and submit transaction
 
 1. Make sure you have `@aptos-labs/wallet-adapter-react` installed.
 
+```bash
+npm install @aptos-labs/wallet-adapter-react@latest
+```
+
 2. Use the `signAndSubmitTransaction` provider method.
 
 ```jsx

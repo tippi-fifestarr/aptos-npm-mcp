@@ -16,7 +16,7 @@ async function main() {
    */
   const server = new FastMCP({
     name: "Aptos Build MCP",
-    version: "0.0.4",
+    version: "0.0.5",
   });
 
   server.addTool({
@@ -141,14 +141,13 @@ async function main() {
       // Define context-to-resource mappings
       const contextMappings = {
         move: [
-          "how_to_develop_smart_contract",
           "how_to_write_a_move_smart_contract",
-          "how_to_publish_move_smart_contract",
+          "how_to_develop_smart_contract",
+          "how_to_deploy_smart_contract",
         ],
         contract: [
-          "how_to_develop_smart_contract",
           "how_to_write_a_move_smart_contract",
-          "how_to_publish_move_smart_contract",
+          "how_to_develop_smart_contract",
           "how_to_deploy_smart_contrac",
         ],
         wallet: [

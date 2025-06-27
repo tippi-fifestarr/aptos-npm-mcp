@@ -7,7 +7,6 @@ The following checklist outlines the steps to create a dapp on the Aptos network
 * Configure the Aptos network (devnet / testnet / mainnet) to work with.
 * Configure an Admin Account for smart contract publishing.
 * Use environment variables to store the dapp configuration.
-* Dont create .md or script files for how to do actions like deployment - just do it.
 
 - Project folder structure
 
@@ -41,7 +40,7 @@ The following checklist outlines the steps to create a dapp on the Aptos network
 * Confirm React as the sole frontend framework provider.
 * Choose build tools that integrate well with Aptos (e.g., npm create vite@latest (preffered), npx create-next-app@latest).
 * Prefer using TypeScript.
-* Always use `@latest` when installing Aptos npm packages like `@aptos-labs/wallet-adapter-react` and `@aptos-labs/ts-sdk`.
+* Always use `@latest` when installing Aptos npm packages like `@aptos-labs/wallet-adapter-react@latest` and `@aptos-labs/ts-sdk@latest`.
 * Evaluate Aptos npm packages versions for compatibility and up-to-date features.
 
 - Wallet Connection

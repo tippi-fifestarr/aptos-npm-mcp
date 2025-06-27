@@ -22,7 +22,12 @@ export const WalletProvider = ({ children }: PropsWithChildren) => {
   return (
     <AptosWalletAdapterProvider
       autoConnect={true}
-      dappConfig={{ network: Network.MAINNET }} // The Aptos Network The Dapp Works With
+      dappConfig={{
+      network: Network.MAINNET,  // The Aptos Network The Dapp Works With
+      aptosApiKeys: {
+          <dapp-network>: APTOS_API_KEY_TESNET,
+        }
+      }}
       onError={(error) => {
         console.log("error", error);
       }}
