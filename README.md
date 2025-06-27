@@ -46,10 +46,19 @@ git clone git@github.com:aptos-labs/aptos-npm-mcp.git
       ![Screenshot 2025-06-26 at 3 54 44 PM](https://github.com/user-attachments/assets/4ead13c6-1697-40e1-b4e7-0fbf7dd5f281)
 
 
-   5. Prompt the agent with something like
-      1. build a < whatever > dapp on Aptos
-      2. Build a frontend of a < whatever > dapp on Aptos
-      3. Write a smart contract for < whatever > on Aptos
+   5. Prompt the agent with the action you want it to do. For best results, try be as much as specific as you can.
+      1. build a full end-to-end dapp on Aptos
+         ```text
+         Help me build a todo list dapp on Aptos. Build the smart contract to handle the dapp logic and help me with deplyoing the contract, the frontend for the UI and wallet connection for users to be able to connect with their wallet.
+         ```
+      3. Build a frontend of a < whatever > dapp on Aptos
+         ```text
+         Help me build a frontend for a todo list dapp on Aptos. Build the UI and wallet connection for users to be able to connect with their wallet.
+         ```
+      5. Write a smart contract for < whatever > on Aptos
+         ```text
+         Help me build a smart contract for a todo list dapp on Aptos. Build the smart contract to handle the dapp logic. Also, help with with deploying the contract.
+         ```
 
 ## Development
 
