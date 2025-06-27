@@ -42,11 +42,11 @@ git clone git@github.com:aptos-labs/aptos-npm-mcp.git
       <br/>
       <img width="270" alt="image (1)" src="https://github.com/user-attachments/assets/957ab3eb-72ef-46ee-b129-f43ecb327158" />
       
-   3. Prompt the agent with `are you using mcp?` to verify usage
+   3. Prompt the agent with `are you using mcp?` to verify the connection. The agent should replay with something like:
       ![Screenshot 2025-06-26 at 3 54 44 PM](https://github.com/user-attachments/assets/4ead13c6-1697-40e1-b4e7-0fbf7dd5f281)
 
 
-   4. Prompt the agent with something like
+   5. Prompt the agent with something like
       1. build a < whatever > dapp on Aptos
       2. Build a frontend of a < whatever > dapp on Aptos
       3. Write a smart contract for < whatever > on Aptos
