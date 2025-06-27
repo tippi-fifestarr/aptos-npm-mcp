@@ -33,12 +33,20 @@ git clone git@github.com:aptos-labs/aptos-npm-mcp.git
    1. Open Cursor Setting: `cursor -> setting -> cursor setting`
    2. Head to the `MCP` section
    3. Make sure it is enabled and showing a green color indicator
-   4. Click the “refresh” icon to update the MCP
+      <img width="939" alt="image" src="https://github.com/user-attachments/assets/568600be-2a00-4381-876d-619e5771f602" />
+
+   5. Click the “refresh” icon to update the MCP
 4. Start vibe coding.
 
    1. Make sure the Cursor AI window dropdown is set to `Agent` and `claude-4-sonnet`
+      <br/>
+      <img width="270" alt="image (1)" src="https://github.com/user-attachments/assets/957ab3eb-72ef-46ee-b129-f43ecb327158" />
+      
+   3. Prompt the agent with `are you using mcp?` to verify usage
+      ![Screenshot 2025-06-26 at 3 54 44 PM](https://github.com/user-attachments/assets/4ead13c6-1697-40e1-b4e7-0fbf7dd5f281)
 
-   2. Prompt the agent with something like
+
+   4. Prompt the agent with something like
       1. “build a <whatever> dapp on Aptos”
       2. “Build a frontend of a <whatever> dapp on Aptos”
 
