@@ -31,7 +31,7 @@ git clone git@github.com:aptos-labs/aptos-npm-mcp.git
 
 3. Verify Cursor runs your MCP
    1. Open Cursor Setting: `cursor -> setting -> cursor setting`
-   2. Head to the `MCP` section
+   2. Head to the `MCP` or `Tools & Integrations` section
    3. Make sure it is enabled and showing a green color indicator
       <img width="939" alt="image" src="https://github.com/user-attachments/assets/568600be-2a00-4381-876d-619e5771f602" />
 
