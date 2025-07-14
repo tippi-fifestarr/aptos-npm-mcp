@@ -30,32 +30,32 @@ git clone git@github.com:aptos-labs/aptos-npm-mcp.git
    5. Make sure to update the `args` to point to the cloned MCP folder from the previous step
 
 3. Verify Cursor runs your MCP
+
    1. Open Cursor Setting: `cursor -> setting -> cursor setting`
    2. Head to the `MCP` or `Tools & Integrations` section
    3. Make sure it is enabled and showing a green color indicator
       <img width="939" alt="image" src="https://github.com/user-attachments/assets/568600be-2a00-4381-876d-619e5771f602" />
 
-   5. Click the “refresh” icon to update the MCP
+   4. Click the “refresh” icon to update the MCP
+
 4. Start vibe coding.
 
    1. Make sure the Cursor AI window dropdown is set to `Agent` and `claude-4-sonnet`
       <br/>
       <img width="270" alt="image (1)" src="https://github.com/user-attachments/assets/957ab3eb-72ef-46ee-b129-f43ecb327158" />
-      
-   3. Prompt the agent with `are you using mcp?` to verify the connection. The agent should replay with something like:
+   2. Prompt the agent with `are you using mcp?` to verify the connection. The agent should replay with something like:
       ![Screenshot 2025-06-26 at 3 54 44 PM](https://github.com/user-attachments/assets/4ead13c6-1697-40e1-b4e7-0fbf7dd5f281)
 
-
-   5. Prompt the agent with the action you want it to do. For best results, try be as much as specific as you can.
+   3. Prompt the agent with the action you want it to do. For best results, try be as much as specific as you can.
       1. build a full end-to-end dapp on Aptos
          ```text
          Help me build a todo list dapp on Aptos. Build the smart contract to handle the dapp logic and help me with deplyoing the contract, the frontend for the UI and wallet connection for users to be able to connect with their wallet.
          ```
-      3. Build a frontend of a < whatever > dapp on Aptos
+      2. Build a frontend of a < whatever > dapp on Aptos
          ```text
          Help me build a frontend for a todo list dapp on Aptos. Build the UI and wallet connection for users to be able to connect with their wallet.
          ```
-      5. Write a smart contract for < whatever > on Aptos
+      3. Write a smart contract for < whatever > on Aptos
          ```text
          Help me build a smart contract for a todo list dapp on Aptos. Build the smart contract to handle the dapp logic. Also, help with with deploying the contract.
          ```
@@ -97,6 +97,18 @@ npm run dev
 ```
 
 This will start the server and allow you to interact with it using CLI.
+
+### Debugging
+
+You can test and debug the MCP using the [MCP Inspector](https://github.com/modelcontextprotocol/inspector) tool.
+
+Run the following command from the root path of this Repo
+
+```bash
+npx @modelcontextprotocol/inspector
+```
+
+That would open up a UI where you can run and test the MCP tools/prompts/resources
 
 ### Linting
 
