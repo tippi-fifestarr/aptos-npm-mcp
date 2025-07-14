@@ -9,16 +9,20 @@ This boilerplate template provides a starting point to build a frontend on aptos
 
 After cloning:
 
-- Delete the `.git` folder to uninitizlie github
-- Move all cloned files to the project root path, and delete the cloned folder
-- Update project name and title in package.json, vite.config.ts, and index files
-- Adjust UI/UX per user prompts
-- Never install packages manually unless asked
-- All core dependencies (@aptos-labs/\*) are already installed using the latest published version
-- When done, take a last round to delete unused files, dependencies, imports, etc
-  - Delete files if needed
-  - Remove dependencies if needed
-    - Run npm install if dependencies where removed
+- Delete the `.git` folder to uninitizlie github.
+- Move all cloned files to the project root path, and delete the cloned folder.
+- Update project name and title in package.json, vite.config.ts, Header.tsx component and index files.
+- When building the queries communicating with a smart contract, make sure to follow the format and syntax in the `entry-functions` and `view-functions` folders.
+  - `entry-functions` should hold all the queries that submit/write to the blockchain.
+  - `view-functions` should hold all the queries that fetch/read from the blockchain.
+  - Keep the same syntax as the existing files when constructing the queries.
+- Adjust UI/UX per user prompts.
+- Never install packages manually unless asked.
+- All core dependencies (@aptos-labs/\*) are already installed using the latest published version.
+- When done, take a last round to delete unused files, dependencies, imports, etc.
+  - Delete files that are not being used by the dapp.
+  - Remove dependencies that are not being used by the dapp.
+    - Run npm install if dependencies where removed.
 
 ✅ Guaranteed compatibility with Wallet Standard and Aptos TypeScript SDK
 

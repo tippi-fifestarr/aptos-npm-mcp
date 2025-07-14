@@ -16,8 +16,20 @@ The following doc outlines the best practices and guidelines to follow when writ
 ### Move syntax
 
 - Always use the `Aptos Move 2` syntax.
-- All comments (other than error code comments) should be using double slash comments (//)
-  - Use double slash comments (//) for function doc strings and comments
+- Use double slash comments (//) for function doc strings and overall comments
+
+  ```rust
+  // doc string for MyStruct
+  struct MyStruct has store, copy, drop {}
+
+  // doc string for my_entry_function
+  public entry fun my_entry_function(account: &signer) {}
+
+  // doc string for my_view_function
+  #[view]
+  public fun my_view_function(account_addr: address) {}
+  ```
+
 - Always use the latest Aptos standards such as - `Object`, `Aptos Fungible Asset (FA) Standard`, `Aptos Digital Asset (DA) Standard`
   - For any Coin, AptosCoin related implementation, use the `Aptos Fungible Asset (FA) Standard`
   - For any NFT related implementation, use the `Aptos Digital Asset (DA) Standard`
@@ -30,4 +42,29 @@ The following doc outlines the best practices and guidelines to follow when writ
 ### Error Codes
 
 - Each error code must be documented with triple slash comments (///) above its definition
+  - ```rust
+      // Error codes
+      /// not found
+      const ENOT_FOUND: u64 = 1;
+      /// not authorized
+      const ENOT_AUTHORIZED: u64 = 2;
+    ```
 - Error messages should be clear and user-friendly with wide context on what the error is, as they are directly visible to end users
+
+### General best practices
+
+- NEVER use let mut var = ...;. ALWAYS use let var = ....
+- NEVER use mut before any function parameter.
+- ALL integers in Move are UNSIGNED. There is no negative number.
+- ALL modules MUST be top-level -- no module within module/function.
+- ALL struct/enum MUST be module-top-level -- no struct/enum within function.
+- At the end of a function body, NEVER use return value; as the last statement. To return some expression/value, simply use it as the last expression without semicolon.
+- NEVER assign tuples to a single variable. let \_ = (a, b, c); is invalid. ALWAY unpack tuple to different variables: let (\_a, \_b, \_c) = (a, b, c);.
+- NEVER create cyclic data types unless explicitly told so.
+- ALWAY ONLY access fields/variants of data structures within the module that defines them. Expose public functions for other modules to interact with data types.
+- ALWAY end if, if-else, while, for, loop body with a semicolon.
+- ALWAYS use the b or x prefix to create strings, e.g. b"byte\nstring" or x"DEADBEEF".
+- NEVER use //# run for functions whose arguments include complex type like struct, enum, or vectors. Create wrappers that takes simple primitive types to run such functions.
+- NEVER use a module before //# publish it. NEVER assume any module exists unless (1) you define and publish it (2) it's in std.
+- ALWAYS explicitly use parentheses to make nested expression or type clear to avoid ambiguous parsing, especially nested function types.
+- NEVER use lifetime specifier!!!

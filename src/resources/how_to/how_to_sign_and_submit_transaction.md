@@ -39,7 +39,7 @@ const SignAndSubmit = () => {
 
     const response = await signAndSubmitTransaction(transaction);
 
-    // if you want to wait for transaction
+    // always wait for transaction
     try {
       await aptos.waitForTransaction({ transactionHash: response.hash });
     } catch (error) {

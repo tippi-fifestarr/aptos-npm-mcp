@@ -14,7 +14,7 @@ That should output something like
 aptos 7.2.0
 ```
 
-2. Make sure you have set up an admin account to deploy the contract with
+2. Set up an admin account to deploy the contract with
 
 ```bash
 aptos init --network <dapp_network>
