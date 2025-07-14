@@ -1,17 +1,20 @@
 /// <reference types="node" />
 import { FastMCP } from "fastmcp";
-
 import { z } from "zod";
 import { readAllMarkdownFromDirectories } from "./utils/index.js";
+import { registerTools } from "./tools/index.js";
+import { config } from "./config.js";
 
 async function main() {
   /**
    * Create a new FastMCP server
    */
   const server = new FastMCP({
-    name: "Aptos Build MCP",
+    name: config.server.name,
     version: "0.0.8",
   });
+
+  registerTools(server);
 
   server.addTool({
     name: "get_mcp_version",
