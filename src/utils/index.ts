@@ -64,3 +64,38 @@ export async function readAllMarkdownFromDirectories(
 
   return combinedContent;
 }
+
+/**
+ * Helper function to read a specific markdown file from a directory
+ */
+export async function readMarkdownFromDirectory(
+  dirPath: string,
+  fileName: string
+): Promise<string> {
+  try {
+    if (!fs.existsSync(dirPath)) {
+      return `Directory not found: ${dirPath}`;
+    }
+
+    // Ensure the fileName has .md extension
+    const markdownFileName = fileName.endsWith(".md")
+      ? fileName
+      : `${fileName}.md`;
+    const filePath = pathJoin(dirPath, markdownFileName);
+
+    if (!fs.existsSync(filePath)) {
+      return `File not found: ${markdownFileName} in ${dirPath}`;
+    }
+
+    // Check if it's actually a markdown file
+    if (extname(markdownFileName).toLowerCase() !== ".md") {
+      return `File is not a markdown file: ${markdownFileName}`;
+    }
+
+    const fileContent = await readFile(filePath, "utf-8");
+    return fileContent;
+  } catch (error) {
+    console.error(`Error reading file ${fileName} from ${dirPath}:`, error);
+    return `Error reading file: ${fileName}`;
+  }
+}

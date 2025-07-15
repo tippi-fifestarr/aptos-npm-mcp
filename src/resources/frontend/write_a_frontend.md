@@ -17,6 +17,9 @@ After cloning:
   - `view-functions` should hold all the queries that fetch/read from the blockchain.
   - Keep the same syntax as the existing files when constructing the queries.
 - Adjust UI/UX per user prompts.
+- ALWAYS default to use the Aptos Testnet, unless specified otherwise.
+- PREFER to set up an Api Key in the dapp to deal with rate limiting issues.
+  - DO NOT try to solve the rate limit issue by refactoring or modify code, or any code manipulation.
 - Never install packages manually unless asked.
 - All core dependencies (@aptos-labs/\*) are already installed using the latest published version.
 - When done, take a last round to delete unused files, dependencies, imports, etc.
