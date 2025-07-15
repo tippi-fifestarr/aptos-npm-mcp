@@ -31,13 +31,20 @@ The following doc outlines the best practices and guidelines to follow when writ
   ```
 
 - Always use the latest Aptos standards such as - `Object`, `Aptos Fungible Asset (FA) Standard`, `Aptos Digital Asset (DA) Standard`
-  - For any Coin, AptosCoin related implementation, use the `Aptos Fungible Asset (FA) Standard`
+  - For any Coin or AptosCoin related implementation, use the `Aptos Fungible Asset (FA) Standard`
   - For any NFT related implementation, use the `Aptos Digital Asset (DA) Standard`
   - For any data, that should be easily modified or that requires other users to use the data, use the Aptos `Object`
 
 ### Unit tests
 
-- Make sure to write unit tests for the Move module.
+- ALWAYS write unit tests for the Move module.
+- ALWAYS make sure the smart contract unit tests pass.
+  - IF there are issues when interacting with the contract, but unit tests are passing, try solve those issues separate from the contract.
+- IF the contract uses `timestamp` module, ALWAYS make sure to initialize `timestamp` in tests
+  ```rust
+  // Initialize timestamp for testing
+  timestamp::set_time_has_started_for_testing(aptos_framework);
+  ```
 
 ### Error Codes
 
@@ -68,3 +75,6 @@ The following doc outlines the best practices and guidelines to follow when writ
 - NEVER use a module before //# publish it. NEVER assume any module exists unless (1) you define and publish it (2) it's in std.
 - ALWAYS explicitly use parentheses to make nested expression or type clear to avoid ambiguous parsing, especially nested function types.
 - NEVER use lifetime specifier!!!
+- IF there are default framework functions the dapp can use, ALWAYS prefer using these instead of writing/adding to a custom smart contract.
+  - Refer to these [framework functions](https://github.com/aptos-labs/aptos-core/tree/main/aptos-move/framework/aptos-framework/sources)
+- ALWAYS default to use the Aptos Testnet, unless specified otherwise.

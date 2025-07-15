@@ -1,10 +1,9 @@
 import type { FastMCP, Tool } from "fastmcp";
 import { z } from "zod";
 import {
+  CreateApiKeyToolScheme,
+  CreateApplicationToolScheme,
   GetOrganizationsToolScheme,
-  GetProjectsToolScheme,
-  GetApplicationsToolScheme,
-  GetApiKeysToolScheme,
 } from "../types/organization.js";
 import { AptosBuild } from "../../services/AptosBuild.js";
 
@@ -13,11 +12,11 @@ export const getOrganizationsTool: Tool<
   typeof GetOrganizationsToolScheme
 > = {
   name: "get_aptos_build_organizations",
-  description: "Get your Aptos Build Organizations",
+  description:
+    "Get your Aptos Build Organizations with their projects and applications and the API Keys. Api Keys are secret keys so it is important to keep them safe and secure.",
   parameters: z.object({}),
   execute: async (args, context) => {
     try {
-      // Create client with specific headers for this call
       const aptosBuild = new AptosBuild();
       const organizations = await aptosBuild.getOrganizations();
       return JSON.stringify(organizations);
@@ -27,60 +26,58 @@ export const getOrganizationsTool: Tool<
   },
 };
 
-export const getProjectsTool: Tool<undefined, typeof GetProjectsToolScheme> = {
-  name: "get_aptos_build_projects",
-  description: "Get your Aptos Build Organizations Projects",
-  parameters: GetProjectsToolScheme,
-  execute: async (args, context) => {
-    try {
-      const aptosBuild = new AptosBuild();
-      const projects = await aptosBuild.getProjects(args);
-      return JSON.stringify(projects);
-    } catch (error) {
-      console.error("Get organizations failed:", error);
-      return `❌ Failed to get organizations: ${(error as Error).message}`;
-    }
-  },
-};
+export const createApiKeyTool: Tool<undefined, typeof CreateApiKeyToolScheme> =
+  {
+    name: "create_aptos_build_api_key",
+    description:
+      "Create a new API Key for your Aptos Build Organization. Api Keys are secret keys so it is important to keep them safe and secure.",
+    parameters: CreateApiKeyToolScheme,
+    execute: async (args, context) => {
+      try {
+        const aptosBuild = new AptosBuild();
+        const apiKey = await aptosBuild.createApiKey({
+          organization_id: args.organization_id,
+          project_id: args.project_id,
+          application_id: args.application_id,
+          name: args.name,
+          frontend_args: args.frontend_args ?? null,
+        });
+        return JSON.stringify(apiKey);
+      } catch (error) {
+        return `❌ Failed to create api key: ${(error as Error).message}`;
+      }
+    },
+  };
 
-export const getApplicationsTool: Tool<
+export const createApplicationTool: Tool<
   undefined,
-  typeof GetApplicationsToolScheme
+  typeof CreateApplicationToolScheme
 > = {
-  name: "get_aptos_build_applications",
-  description: "Get your Aptos Build Organizations Applications",
-  parameters: GetApplicationsToolScheme,
+  name: "create_aptos_build_application",
+  description: "Create a new Application for your Aptos Build Organization.",
+  parameters: CreateApplicationToolScheme,
   execute: async (args, context) => {
     try {
       const aptosBuild = new AptosBuild();
-      const applications = await aptosBuild.getApplications(args);
-      return JSON.stringify(applications);
+      const application = await aptosBuild.createApplication({
+        organization_id: args.organization_id,
+        project_id: args.project_id,
+        args: {
+          name: args.name,
+          network: args.network,
+          description: args.description ?? null,
+          service_type: "Api",
+        },
+      });
+      return JSON.stringify(application);
     } catch (error) {
-      console.error("Get applications failed:", error);
-      return `❌ Failed to get applications: ${(error as Error).message}`;
-    }
-  },
-};
-
-export const getApiKeysTool: Tool<undefined, typeof GetApiKeysToolScheme> = {
-  name: "get_aptos_build_api_keys",
-  description: "Get your Aptos Build Projects Api Keys",
-  parameters: GetApiKeysToolScheme,
-  execute: async (args, context) => {
-    try {
-      const aptosBuild = new AptosBuild();
-      const apiKeys = await aptosBuild.getApiKeys(args);
-      return JSON.stringify(apiKeys);
-    } catch (error) {
-      console.error("Get organizations failed:", error);
-      return `❌ Failed to get organizations: ${(error as Error).message}`;
+      return `❌ Failed to create application: ${(error as Error).message}`;
     }
   },
 };
 
 export function registerOrganizationTools(server: FastMCP): void {
   server.addTool(getOrganizationsTool);
-  server.addTool(getProjectsTool);
-  server.addTool(getApplicationsTool);
-  server.addTool(getApiKeysTool);
+  server.addTool(createApplicationTool);
+  server.addTool(createApiKeyTool);
 }

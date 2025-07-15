@@ -1,7 +1,10 @@
 /// <reference types="node" />
 import { FastMCP } from "fastmcp";
 import { z } from "zod";
-import { readAllMarkdownFromDirectories } from "./utils/index.js";
+import {
+  readAllMarkdownFromDirectories,
+  readMarkdownFromDirectory,
+} from "./utils/index.js";
 import { registerTools } from "./tools/index.js";
 import { config } from "./config.js";
 
@@ -117,14 +120,7 @@ async function main() {
     description: "Build a complete full-stack Aptos dApp",
     load: async (args) => {
       return `You are a helpful assistant that can help with building a full-stack end-to-end dapp on Aptos.
-      Before starting the build process, you need to get the following information for the user:
-
-    1. What Aptos network would you like to use? Options are:
-      - devnet
-      - testnet
-      - mainnet
-
-    2. Do you have an admin account you want to use to deploy the dapp or generate a new one?
+      For anything related to Aptos, you should always default to search for resources and tools in the MCP. Only if you have not found what you need, then you can search the web or use your own knowledge.
       `;
     },
   });

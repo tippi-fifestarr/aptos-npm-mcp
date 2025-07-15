@@ -12,51 +12,52 @@ export const GetProjectsToolScheme = z.object({
     ),
 });
 
-// Get Applications Scheme
-export const GetApplicationsToolScheme = z.object({
+// Create Api Key Scheme
+export const CreateApiKeyToolScheme = z.object({
   organization_id: z
     .string()
-    .describe(
-      "The organization id to get applications for. If not provided, returns available applications overview."
-    ),
-  projects_id: z
-    .string()
-    .describe(
-      "The project id to get applications for. If not provided, returns available applications overview."
-    ),
-});
-
-// Get Api Keys Scheme
-export const GetApiKeysToolScheme = z.object({
+    .describe("The organization id to create the api key for."),
+  project_id: z.string().describe("The project id to create the api key for."),
   application_id: z
     .string()
-    .describe(
-      "The application id to get api keys for. If not provided, returns available api keys overview."
-    ),
+    .describe("The application id to create the api key for."),
+  name: z.string().describe("The name of the api key."),
+  frontend_args: z.object({
+    web_app_urls: z
+      .array(z.string())
+      .describe(
+        "The web app urls to allow the api key to access. If not provided, all URLs will be allowed."
+      )
+      .default([]),
+    extension_ids: z
+      .array(z.string())
+      .describe(
+        "The extension ids to allow the api key to access. If not provided, all extension ids will be allowed."
+      )
+      .default([]),
+    http_rate_limit_per_ip: z
+      .number()
+      .describe(
+        "The http rate limit per ip. If not provided, the default 2,000,000 Compute Units per 5 minutes rate limit will be used."
+      )
+      .default(2000000),
+  }),
+});
+
+export const CreateApplicationToolScheme = z.object({
   organization_id: z
     .string()
-    .describe(
-      "The organization id to get api keys for. If not provided, returns available api keys overview."
-    ),
+    .describe("The organization id to create the application for."),
   project_id: z
     .string()
-    .describe(
-      "The project id to get api keys for. If not provided, returns available api keys overview."
-    ),
+    .describe("The project id to create the application for."),
+  name: z.string().describe("The name of the application."),
+  network: z.string().describe("The network to create the application for."),
+  description: z
+    .string()
+    .describe("The description of the application.")
+    .optional(),
 });
 
 // Query params types
-export type ProjectsGetParams = z.infer<typeof GetProjectsToolScheme>;
-export type ApplicationsGetParams = z.infer<typeof GetApplicationsToolScheme>;
-export type ApiKeysGetParams = z.infer<typeof GetApiKeysToolScheme>;
-
-// Response types
-export type ApplicationsResponse = {
-  id: string;
-  name: string;
-  description: string | null;
-  allowedNetworks: string[];
-  createdAt: string;
-  projectId: string;
-  serviceType: string;
-}[];
+export type CreateApiKeyParams = z.infer<typeof CreateApiKeyToolScheme>;

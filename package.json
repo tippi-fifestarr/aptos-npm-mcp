@@ -24,7 +24,7 @@
     "package.json"
   ],
   "dependencies": {
-    "@aptos-labs/api-gateway-admin-api-client": "^2.0.0",
+    "@aptos-labs/api-gateway-admin-api-client": "^2.1.0",
     "dotenv": "^16.6.1",
     "fastmcp": "^1.27.3",
     "zod": "^3.24.4"

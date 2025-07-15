@@ -1,15 +1,12 @@
-import { config } from "../config.js";
 import {
   ApiKey,
+  Application,
   createAdminApiClient,
-  Project,
+  CreateApiKeyFrontendArgs,
+  CreateApplicationArgs,
+  RecursiveOrgData,
 } from "@aptos-labs/api-gateway-admin-api-client";
-import {
-  ApiKeysGetParams,
-  ApplicationsGetParams,
-  ApplicationsResponse,
-  ProjectsGetParams,
-} from "../tools/types/organization.js";
+import { config } from "../config.js";
 
 export class AptosBuild {
   private readonly adminUrl: string;
@@ -65,67 +62,83 @@ export class AptosBuild {
     });
   }
 
-  // TODO - update with recent recursive endpoint
-  async getOrganizations(): Promise<
-    { id: string; name: string; createdAt: string }[]
-  > {
+  /**
+   * Get all organizations with their projects and applications and the API Keys.
+   * @returns RecursiveOrgData[]
+   */
+  async getOrganizations(): Promise<RecursiveOrgData[]> {
     try {
       const adminApiClient = this.createApiClient();
-      const organizations = await adminApiClient.query(["getOrganizations"]);
+      const organizations = await adminApiClient.query([
+        "getOrganizationsRecursively",
+      ]);
       return organizations;
     } catch (error) {
       throw new Error(`Failed to get organizations: ${String(error)}`);
     }
   }
 
-  async getProjects({
-    organization_id,
-  }: ProjectsGetParams): Promise<Project[]> {
-    try {
-      const adminApiClient = this.createApiClient({
-        "x-jwt-organization-id": organization_id,
-      });
-      const projects = await adminApiClient.query(["getOrganizationProjects"]);
-      return projects;
-    } catch (error) {
-      throw new Error(`Failed to get projects: ${String(error)}`);
-    }
-  }
-
-  async getApplications({
-    organization_id,
-    projects_id,
-  }: ApplicationsGetParams): Promise<ApplicationsResponse> {
-    try {
-      // Create client with specific headers for this call
-      const adminApiClient = this.createApiClient({
-        "x-jwt-organization-id": organization_id,
-        "x-jwt-project-id": projects_id,
-      });
-      const applications = await adminApiClient.query([
-        "getProjectApplications",
-      ]);
-      return applications;
-    } catch (error) {
-      throw new Error(`Failed to get applications: ${String(error)}`);
-    }
-  }
-
-  async getApiKeys({
-    application_id,
+  /**
+   * Create a new API Key for an application.
+   * @returns ApiKey
+   */
+  async createApiKey({
     organization_id,
     project_id,
-  }: ApiKeysGetParams): Promise<ApiKey[]> {
+    application_id,
+    name,
+    frontend_args,
+  }: {
+    organization_id: string;
+    project_id: string;
+    application_id: string;
+    name: string;
+    frontend_args: CreateApiKeyFrontendArgs | null;
+  }): Promise<ApiKey> {
     try {
       const adminApiClient = this.createApiClient({
+        "x-jwt-organization-id": organization_id,
+        "x-jwt-project-id": project_id,
         "x-jwt-application-id": application_id,
+      });
+      const apiKey = await adminApiClient.mutation([
+        "createApiKeyV2",
+        {
+          name,
+          frontend_args,
+        },
+      ]);
+      return apiKey;
+    } catch (error) {
+      throw new Error(`Failed to create api key: ${String(error)}`);
+    }
+  }
+
+  /**
+   * Create a new Application for a project.
+   * @returns Application
+   */
+  async createApplication({
+    organization_id,
+    project_id,
+    args,
+  }: {
+    organization_id: string;
+    project_id: string;
+    args: CreateApplicationArgs;
+  }): Promise<Application> {
+    try {
+      const adminApiClient = this.createApiClient({
         "x-jwt-organization-id": organization_id,
         "x-jwt-project-id": project_id,
       });
-      const apiKeys = await adminApiClient.query(["getApiKeysV2"]);
-      return apiKeys;
+      const application = await adminApiClient.mutation([
+        "createApplicationV2",
+        args,
+      ]);
+      return application;
     } catch (error) {
-      throw new Error(`Failed to get api keys: ${String(error)}`);
+      throw new Error(`Failed to create application: ${String(error)}`);
     }
   }
 }
