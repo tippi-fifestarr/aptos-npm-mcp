@@ -31,10 +31,10 @@ To be able to make [Aptos Build] actions like generate api keys, etc. Follow tho
         "aptos-build-mcp": {
           "command": "npx",
           "args": ["tsx", "<path-to-mcp-server>/src/server.ts"],
-          "type": "stdio"
-        },
-        "env": {
-          "APTOS_BOT_KEY": "<bot_api_key>"
+          "type": "stdio",
+          "env": {
+            "APTOS_BOT_KEY": "<bot_api_key>"
+          }
         }
       }
     }
