@@ -19,7 +19,7 @@ Make sure you have published your Move module and have the module address.
    - Select the function(s) to subsidize
    - Set gas limits (default: 3-50 per transaction, 100 OCTA gas price)
 
-4. Create the Gas Station and copy the auto-generated API key (`aptoslabs_xxx...`).
+4. Create the Gas Station and copy the auto-generated GAS STATION API key (`aptoslabs_xxx...`).
 
 **Note**: For enhanced rate limits and better performance when making SDK calls to read blockchain data, consider also setting up Full Node API keys. See [how_to_manage_api_keys_as_project_resources.md](./how_to_manage_api_keys_as_project_resources.md) for details.
 
