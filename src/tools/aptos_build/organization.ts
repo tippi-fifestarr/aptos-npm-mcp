@@ -3,6 +3,8 @@ import { z } from "zod";
 import {
   CreateApiKeyToolScheme,
   CreateApplicationToolScheme,
+  CreateOrganizationToolScheme,
+  CreateProjectToolScheme,
   getApplicationsToolScheme,
 } from "../types/organization.js";
 import { AptosBuild } from "../../services/AptosBuild.js";
@@ -23,6 +25,75 @@ export const getApplicationsTool: Tool<
       return JSON.stringify(organizations);
     } catch (error) {
       return `❌ Failed to get organizations: ${(error as Error).message}`;
+    }
+  },
+};
+
+export const createOrganizationTool: Tool<
+  undefined,
+  typeof CreateOrganizationToolScheme
+> = {
+  name: "create_aptos_build_organization",
+  description: "Create a new Organization for your Aptos Build.",
+  parameters: CreateOrganizationToolScheme,
+  execute: async (args, context) => {
+    try {
+      const aptosBuild = new AptosBuild();
+      const organization = await aptosBuild.createOrganization({
+        name: args.name,
+      });
+      return JSON.stringify(organization);
+    } catch (error) {
+      return `❌ Failed to create organization: ${(error as Error).message}`;
+    }
+  },
+};
+
+export const createProjectTool: Tool<
+  undefined,
+  typeof CreateProjectToolScheme
+> = {
+  name: "create_aptos_build_project",
+  description: "Create a new Project for your Aptos Build Organization.",
+  parameters: CreateProjectToolScheme,
+  execute: async (args, context) => {
+    try {
+      const aptosBuild = new AptosBuild();
+      const project = await aptosBuild.createProject({
+        organization_id: args.organization_id,
+        project_name: args.project_name,
+        description: args.description,
+      });
+      return JSON.stringify(project);
+    } catch (error) {
+      return `❌ Failed to create project: ${(error as Error).message}`;
+    }
+  },
+};
+
+export const createApplicationTool: Tool<
+  undefined,
+  typeof CreateApplicationToolScheme
+> = {
+  name: "create_aptos_build_application",
+  description: "Create a new Application for your Aptos Build Organization.",
+  parameters: CreateApplicationToolScheme,
+  execute: async (args, context) => {
+    try {
+      const aptosBuild = new AptosBuild();
+      const application = await aptosBuild.createApplication({
+        organization_id: args.organization_id,
+        project_id: args.project_id,
+        args: {
+          name: args.name,
+          network: args.network,
+          description: args.description ?? null,
+          service_type: args.service_type,
+        },
+      });
+      return JSON.stringify(application);
+    } catch (error) {
+      return `❌ Failed to create application: ${(error as Error).message}`;
     }
   },
 };
@@ -50,35 +121,10 @@ export const createApiKeyTool: Tool<undefined, typeof CreateApiKeyToolScheme> =
     },
   };
 
-export const createApplicationTool: Tool<
-  undefined,
-  typeof CreateApplicationToolScheme
-> = {
-  name: "create_aptos_build_application",
-  description: "Create a new Application for your Aptos Build Organization.",
-  parameters: CreateApplicationToolScheme,
-  execute: async (args, context) => {
-    try {
-      const aptosBuild = new AptosBuild();
-      const application = await aptosBuild.createApplication({
-        organization_id: args.organization_id,
-        project_id: args.project_id,
-        args: {
-          name: args.name,
-          network: args.network,
-          description: args.description ?? null,
-          service_type: "Api",
-        },
-      });
-      return JSON.stringify(application);
-    } catch (error) {
-      return `❌ Failed to create application: ${(error as Error).message}`;
-    }
-  },
-};
-
 export function registerOrganizationTools(server: FastMCP): void {
   server.addTool(getApplicationsTool);
+  server.addTool(createOrganizationTool);
   server.addTool(createApplicationTool);
+  server.addTool(createProjectTool);
   server.addTool(createApiKeyTool);
 }

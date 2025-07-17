@@ -51,12 +51,44 @@ export const CreateApplicationToolScheme = z.object({
   project_id: z
     .string()
     .describe("The project id to create the application for."),
-  name: z.string().describe("The name of the application."),
+  name: z
+    .string()
+    .describe(
+      "The name of the application. Must be between 3 and 32 characters long, with only lowercase letters, numbers, dashes and underscores."
+    ),
   network: z.string().describe("The network to create the application for."),
+  service_type: z
+    .enum(["Api", "Gs"])
+    .describe(
+      "The service type of the application. Api is for Full Node API, Gs is for Gas Station."
+    ),
   description: z
     .string()
     .describe("The description of the application.")
     .optional(),
+});
+
+export const CreateProjectToolScheme = z.object({
+  organization_id: z
+    .string()
+    .describe("The organization id to create the project for."),
+  project_name: z
+    .string()
+    .describe(
+      "The name of the project. Must be between 3 and 32 characters long, with only lowercase letters, numbers, dashes and underscores."
+    ),
+  description: z
+    .string()
+    .describe("The description of the project.")
+    .optional(),
+});
+
+export const CreateOrganizationToolScheme = z.object({
+  name: z
+    .string()
+    .describe(
+      "The name of the organization. Must be between 3 and 32 characters long, with only lowercase letters, numbers, dashes and underscores."
+    ),
 });
 
 // Query params types
