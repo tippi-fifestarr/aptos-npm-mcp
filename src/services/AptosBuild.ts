@@ -66,7 +66,7 @@ export class AptosBuild {
    * Get all organizations with their projects and applications and the API Keys.
    * @returns RecursiveOrgData[]
    */
-  async getOrganizations(): Promise<RecursiveOrgData[]> {
+  async getApplications(): Promise<RecursiveOrgData[]> {
     try {
       const adminApiClient = this.createApiClient();
       const organizations = await adminApiClient.query([
