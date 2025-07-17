@@ -1,7 +1,7 @@
 import { z } from "zod";
 
 // Get Organizations Scheme
-export const GetOrganizationsToolScheme = z.object({});
+export const getApplicationsToolScheme = z.object({});
 
 // Get Projects Scheme
 export const GetProjectsToolScheme = z.object({

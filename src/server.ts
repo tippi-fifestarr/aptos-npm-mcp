@@ -1,10 +1,7 @@
 /// <reference types="node" />
 import { FastMCP } from "fastmcp";
 import { z } from "zod";
-import {
-  readAllMarkdownFromDirectories,
-  readMarkdownFromDirectory,
-} from "./utils/index.js";
+import { readAllMarkdownFromDirectories } from "./utils/index.js";
 import { registerTools } from "./tools/index.js";
 import { config } from "./config.js";
 

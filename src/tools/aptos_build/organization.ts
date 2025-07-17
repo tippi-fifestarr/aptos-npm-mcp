@@ -3,22 +3,23 @@ import { z } from "zod";
 import {
   CreateApiKeyToolScheme,
   CreateApplicationToolScheme,
-  GetOrganizationsToolScheme,
+  getApplicationsToolScheme,
 } from "../types/organization.js";
 import { AptosBuild } from "../../services/AptosBuild.js";
 
-export const getOrganizationsTool: Tool<
+export const getApplicationsTool: Tool<
   undefined,
-  typeof GetOrganizationsToolScheme
+  typeof getApplicationsToolScheme
 > = {
-  name: "get_aptos_build_organizations",
-  description:
-    "Get your Aptos Build Organizations with their projects and applications and the API Keys. Api Keys are secret keys so it is important to keep them safe and secure.",
+  name: "get_aptos_build_applications",
+  description: `Get your Aptos Build Organizations with their projects and applications and the API Keys. Api Keys are secret keys so it is important to keep them safe and secure.
+    To get the full node api keys, you need to get the Applications with a serviceType of "Api".
+    To get the gas station api keys, you need to get the Applications with a serviceType of "Gs".`,
   parameters: z.object({}),
   execute: async (args, context) => {
     try {
       const aptosBuild = new AptosBuild();
-      const organizations = await aptosBuild.getOrganizations();
+      const organizations = await aptosBuild.getApplications();
       return JSON.stringify(organizations);
     } catch (error) {
       return `❌ Failed to get organizations: ${(error as Error).message}`;
@@ -77,7 +78,7 @@ export const createApplicationTool: Tool<
 };
 
 export function registerOrganizationTools(server: FastMCP): void {
-  server.addTool(getOrganizationsTool);
+  server.addTool(getApplicationsTool);
   server.addTool(createApplicationTool);
   server.addTool(createApiKeyTool);
 }
