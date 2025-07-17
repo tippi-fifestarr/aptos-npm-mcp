@@ -44,7 +44,7 @@ export const CreateApiKeyToolScheme = z.object({
   }),
 });
 
-export const CreateApplicationToolScheme = z.object({
+export const CreateApiResourceApplicationToolScheme = z.object({
   organization_id: z
     .string()
     .describe("The organization id to create the application for."),
@@ -57,11 +57,6 @@ export const CreateApplicationToolScheme = z.object({
       "The name of the application. Must be between 3 and 32 characters long, with only lowercase letters, numbers, dashes and underscores."
     ),
   network: z.string().describe("The network to create the application for."),
-  service_type: z
-    .enum(["Api", "Gs"])
-    .describe(
-      "The service type of the application. Api is for Full Node API resource, Gs is for Gas Station resource."
-    ),
   description: z
     .string()
     .describe("The description of the application.")

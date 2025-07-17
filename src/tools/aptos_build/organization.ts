@@ -2,7 +2,7 @@ import type { FastMCP, Tool } from "fastmcp";
 import { z } from "zod";
 import {
   CreateApiKeyToolScheme,
-  CreateApplicationToolScheme,
+  CreateApiResourceApplicationToolScheme,
   CreateOrganizationToolScheme,
   CreateProjectToolScheme,
   getApplicationsToolScheme,
@@ -71,36 +71,28 @@ export const createProjectTool: Tool<
   },
 };
 
-export const createApplicationTool: Tool<
+export const createApiResourceApplicationTool: Tool<
   undefined,
-  typeof CreateApplicationToolScheme
+  typeof CreateApiResourceApplicationToolScheme
 > = {
-  name: "create_aptos_build_application",
+  name: "create_aptos_build_api_resource_application",
   description:
-    "Create a new Application for your Aptos Build Organization. This tool can be used to create an API resource application or a gas station application",
-  parameters: CreateApplicationToolScheme,
+    "Create a new Application for your Aptos Build Organization. This tool can be used to create an API resource application to then create api keys for general blockchain interactions.",
+  parameters: CreateApiResourceApplicationToolScheme,
   execute: async (args, context) => {
     try {
-      const { service_type } = args;
-      switch (service_type) {
-        case "Api":
-          const aptosBuild = new AptosBuild();
-          const application = await aptosBuild.createApplication({
-            organization_id: args.organization_id,
-            project_id: args.project_id,
-            args: {
-              name: args.name,
-              network: args.network,
-              description: args.description ?? null,
-              service_type: "Api",
-            },
-          });
-          return JSON.stringify(application);
-        case "Gs":
-          throw new Error("Gas Station resource is not supported yet.");
-        default:
-          throw new Error(`Invalid service type: ${service_type}`);
-      }
+      const aptosBuild = new AptosBuild();
+      const application = await aptosBuild.createApplication({
+        organization_id: args.organization_id,
+        project_id: args.project_id,
+        args: {
+          name: args.name,
+          network: args.network,
+          description: args.description ?? null,
+          service_type: "Api",
+        },
+      });
+      return JSON.stringify(application);
     } catch (error) {
       return `❌ Failed to create application: ${(error as Error).message}`;
     }
@@ -133,7 +125,7 @@ export const createApiKeyTool: Tool<undefined, typeof CreateApiKeyToolScheme> =
 export function registerOrganizationTools(server: FastMCP): void {
   server.addTool(getApplicationsTool);
   server.addTool(createOrganizationTool);
-  server.addTool(createApplicationTool);
+  server.addTool(createApiResourceApplicationTool);
   server.addTool(createProjectTool);
   server.addTool(createApiKeyTool);
 }
