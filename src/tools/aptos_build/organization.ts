@@ -76,22 +76,31 @@ export const createApplicationTool: Tool<
   typeof CreateApplicationToolScheme
 > = {
   name: "create_aptos_build_application",
-  description: "Create a new Application for your Aptos Build Organization.",
+  description:
+    "Create a new Application for your Aptos Build Organization. This tool can be used to create an API resource application or a gas station application",
   parameters: CreateApplicationToolScheme,
   execute: async (args, context) => {
     try {
-      const aptosBuild = new AptosBuild();
-      const application = await aptosBuild.createApplication({
-        organization_id: args.organization_id,
-        project_id: args.project_id,
-        args: {
-          name: args.name,
-          network: args.network,
-          description: args.description ?? null,
-          service_type: args.service_type,
-        },
-      });
-      return JSON.stringify(application);
+      const { service_type } = args;
+      switch (service_type) {
+        case "Api":
+          const aptosBuild = new AptosBuild();
+          const application = await aptosBuild.createApplication({
+            organization_id: args.organization_id,
+            project_id: args.project_id,
+            args: {
+              name: args.name,
+              network: args.network,
+              description: args.description ?? null,
+              service_type: "Api",
+            },
+          });
+          return JSON.stringify(application);
+        case "Gs":
+          throw new Error("Gas Station resource is not supported yet.");
+        default:
+          throw new Error(`Invalid service type: ${service_type}`);
+      }
     } catch (error) {
       return `❌ Failed to create application: ${(error as Error).message}`;
     }
@@ -101,8 +110,8 @@ export const createApplicationTool: Tool<
 export const createApiKeyTool: Tool<undefined, typeof CreateApiKeyToolScheme> =
   {
     name: "create_aptos_build_api_key",
-    description:
-      "Create a new API Key for your Aptos Build Organization. Api Keys are secret keys so it is important to keep them safe and secure.",
+    description: `Create a new API Key for your Aptos Build Organization. Api Keys are secret keys so it is important to keep them safe and secure. 
+      This tool can be used to create an Api Key (aka full node api key) for an Api resource application.`,
     parameters: CreateApiKeyToolScheme,
     execute: async (args, context) => {
       try {

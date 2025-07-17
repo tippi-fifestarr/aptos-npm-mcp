@@ -1,7 +1,10 @@
 /// <reference types="node" />
 import { FastMCP } from "fastmcp";
 import { z } from "zod";
-import { readAllMarkdownFromDirectories } from "./utils/index.js";
+import {
+  readAllMarkdownFromDirectories,
+  readMarkdownFromDirectory,
+} from "./utils/index.js";
 import { registerTools } from "./tools/index.js";
 import { config } from "./config.js";
 
@@ -111,6 +114,22 @@ async function main() {
       };
     },
   });
+
+  // server.addResource({
+  //   uri: "how_to/full_node_api_key",
+  //   name: "full_node_api_key_resource",
+  //   description:
+  //     "How to set up and config a full node api key in a dapp for general blockchain interactions.",
+  //   load: async () => {
+  //     const content = await readMarkdownFromDirectory(
+  //       "how_to",
+  //       "full_node_api_key"
+  //     );
+  //     return {
+  //       text: content,
+  //     };
+  //   },
+  // });
 
   server.addPrompt({
     name: "build_dapp_on_aptos",

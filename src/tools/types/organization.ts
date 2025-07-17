@@ -60,7 +60,7 @@ export const CreateApplicationToolScheme = z.object({
   service_type: z
     .enum(["Api", "Gs"])
     .describe(
-      "The service type of the application. Api is for Full Node API, Gs is for Gas Station."
+      "The service type of the application. Api is for Full Node API resource, Gs is for Gas Station resource."
     ),
   description: z
     .string()
@@ -77,10 +77,7 @@ export const CreateProjectToolScheme = z.object({
     .describe(
       "The name of the project. Must be between 3 and 32 characters long, with only lowercase letters, numbers, dashes and underscores."
     ),
-  description: z
-    .string()
-    .describe("The description of the project.")
-    .optional(),
+  description: z.string().describe("The description of the project."),
 });
 
 export const CreateOrganizationToolScheme = z.object({
