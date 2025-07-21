@@ -7,6 +7,8 @@ import {
 } from "./utils/index.js";
 import { registerTools } from "./tools/index.js";
 import { config } from "./config.js";
+import { basename, extname, join as pathJoin } from "node:path";
+import fs from "node:fs";
 
 async function main() {
   /**
@@ -14,7 +16,7 @@ async function main() {
    */
   const server = new FastMCP({
     name: config.server.name,
-    version: "0.0.8",
+    version: "0.0.10",
   });
 
   registerTools(server);
@@ -85,32 +87,63 @@ async function main() {
     },
   });
 
+  // Dynamic discovery
+  const getAvailableHowToResources = () => {
+    try {
+      const howToDir = pathJoin(process.cwd(), "src/resources/how_to");
+      const files = fs.readdirSync(howToDir);
+      return files
+        .filter((file) => extname(file).toLowerCase() === ".md")
+        .map((file) => basename(file, extname(file)));
+    } catch (err) {
+      console.error(`Error reading how_to directory: ${err}`);
+      return [];
+    }
+  };
+
+  // Step 1: Discovery tool - returns list of available resources
   server.addTool({
-    name: "get_aptos_resources",
+    name: "list_aptos_resources",
     description:
-      "Use this when you need guidance on any specific aspect of Aptos resources for development - the tool will automatically identify and return the most relevant resources.",
-    parameters: z.object({
-      context: z
-        .string()
-        .optional()
-        .describe(
-          "The context or what you're trying to accomplish (e.g., 'gas station', 'no code indexer', etc.). If not provided, returns available resources overview."
-        ),
-      specific_resource: z
-        .string()
-        .optional()
-        .describe(
-          "If you know the exact resource name, specify it here (without .md extension)"
-        ),
-    }),
-    execute: async (args, context) => {
-      const content = await readAllMarkdownFromDirectories(["how_to"]);
+      "Get a list of all available Aptos development resources. Use this first to see what guidance is available, then use get_specific_aptos_resource to fetch the relevant one.",
+    parameters: z.object({}),
+    execute: async () => {
+      const availableFiles = getAvailableHowToResources();
 
       return {
         type: "text",
-        text:
-          content ||
-          "No content found in management, move, and frontend directories.",
+        text: `Available Aptos development resources:\n${availableFiles.map((f) => `- ${f}`).join("\n")}\n\nUse get_specific_aptos_resource with the exact filename to retrieve content.`,
+      };
+    },
+  });
+
+  // Step 2: Retrieval tool - gets specific resource by exact name
+  server.addTool({
+    name: "get_specific_aptos_resource",
+    description:
+      "Retrieve a specific Aptos development resource by its exact filename (without .md extension).",
+    parameters: z.object({
+      filename: z
+        .string()
+        .describe(
+          "Exact filename of the resource (e.g., 'how_to_add_wallet_connection', 'how_to_config_a_full_node_api_key_in_a_dapp', 'how_to_integrate_fungible_asset')"
+        ),
+    }),
+    execute: async (args) => {
+      const { filename } = args;
+      const availableFiles = getAvailableHowToResources();
+
+      if (!availableFiles.includes(filename)) {
+        return {
+          type: "text",
+          text: `Resource '${filename}' not found. Available resources:\n${availableFiles.join("\n")}`,
+        };
+      }
+
+      const content = await readMarkdownFromDirectory("how_to", filename);
+      return {
+        type: "text",
+        text: content,
       };
     },
   });

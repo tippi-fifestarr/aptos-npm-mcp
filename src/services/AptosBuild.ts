@@ -4,9 +4,12 @@ import {
   createAdminApiClient,
   CreateApiKeyFrontendArgs,
   CreateApplicationArgs,
+  Organization,
+  Project,
   RecursiveOrgData,
 } from "@aptos-labs/api-gateway-admin-api-client";
 import { config } from "../config.js";
+import { recordTelemetry } from "../utils/telemtry.js";
 
 export class AptosBuild {
   private readonly adminUrl: string;
@@ -66,7 +69,7 @@ export class AptosBuild {
    * Get all organizations with their projects and applications and the API Keys.
    * @returns RecursiveOrgData[]
    */
-  async getOrganizations(): Promise<RecursiveOrgData[]> {
+  async getApplications(): Promise<RecursiveOrgData[]> {
     try {
       const adminApiClient = this.createApiClient();
       const organizations = await adminApiClient.query([
@@ -75,6 +78,82 @@ export class AptosBuild {
       return organizations;
     } catch (error) {
       throw new Error(`Failed to get organizations: ${String(error)}`);
+    }
+  }
+
+  /**
+   * Create a new Organization.
+   * @returns Organization
+   */
+  async createOrganization({ name }: { name: string }): Promise<Organization> {
+    try {
+      const adminApiClient = this.createApiClient();
+      const organization = await adminApiClient.mutation([
+        "createOrganization",
+        { name },
+      ]);
+      return organization;
+    } catch (error) {
+      throw new Error(`Failed to create organization: ${String(error)}`);
+    }
+  }
+
+  /**
+   * Create a new Project for an Organization.
+   * @returns Project
+   */
+  async createProject({
+    organization_id,
+    project_name,
+    description,
+  }: {
+    organization_id: string;
+    project_name: string;
+    description: string;
+  }): Promise<Project> {
+    try {
+      const adminApiClient = this.createApiClient({
+        "x-jwt-organization-id": organization_id,
+      });
+      const project = await adminApiClient.mutation([
+        "createProject",
+        {
+          project_name,
+          description,
+        },
+      ]);
+      return project;
+    } catch (error) {
+      throw new Error(`Failed to create project: ${String(error)}`);
+    }
+  }
+
+  /**
+   * Create a new Application for a project.
+   * Application can be of type Full Node API, Gas Station.
+   * @returns Application
+   */
+  async createApplication({
+    organization_id,
+    project_id,
+    args,
+  }: {
+    organization_id: string;
+    project_id: string;
+    args: CreateApplicationArgs;
+  }): Promise<Application> {
+    try {
+      const adminApiClient = this.createApiClient({
+        "x-jwt-organization-id": organization_id,
+        "x-jwt-project-id": project_id,
+      });
+      const application = await adminApiClient.mutation([
+        "createApplicationV2",
+        args,
+      ]);
+      return application;
+    } catch (error) {
+      throw new Error(`Failed to create application: ${String(error)}`);
     }
   }
 
@@ -111,34 +190,6 @@ export class AptosBuild {
       return apiKey;
     } catch (error) {
       throw new Error(`Failed to create api key: ${String(error)}`);
-    }
-  }
-
-  /**
-   * Create a new Application for a project.
-   * @returns Application
-   */
-  async createApplication({
-    organization_id,
-    project_id,
-    args,
-  }: {
-    organization_id: string;
-    project_id: string;
-    args: CreateApplicationArgs;
-  }): Promise<Application> {
-    try {
-      const adminApiClient = this.createApiClient({
-        "x-jwt-organization-id": organization_id,
-        "x-jwt-project-id": project_id,
-      });
-      const application = await adminApiClient.mutation([
-        "createApplicationV2",
-        args,
-      ]);
-      return application;
-    } catch (error) {
-      throw new Error(`Failed to create application: ${String(error)}`);
     }
   }
 }

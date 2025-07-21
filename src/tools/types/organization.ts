@@ -1,7 +1,7 @@
 import { z } from "zod";
 
 // Get Organizations Scheme
-export const GetOrganizationsToolScheme = z.object({});
+export const getApplicationsToolScheme = z.object({});
 
 // Get Projects Scheme
 export const GetProjectsToolScheme = z.object({
@@ -44,19 +44,43 @@ export const CreateApiKeyToolScheme = z.object({
   }),
 });
 
-export const CreateApplicationToolScheme = z.object({
+export const CreateApiResourceApplicationToolScheme = z.object({
   organization_id: z
     .string()
     .describe("The organization id to create the application for."),
   project_id: z
     .string()
     .describe("The project id to create the application for."),
-  name: z.string().describe("The name of the application."),
+  name: z
+    .string()
+    .describe(
+      "The name of the application. Must be between 3 and 32 characters long, with only lowercase letters, numbers, dashes and underscores."
+    ),
   network: z.string().describe("The network to create the application for."),
   description: z
     .string()
     .describe("The description of the application.")
     .optional(),
+});
+
+export const CreateProjectToolScheme = z.object({
+  organization_id: z
+    .string()
+    .describe("The organization id to create the project for."),
+  project_name: z
+    .string()
+    .describe(
+      "The name of the project. Must be between 3 and 32 characters long, with only lowercase letters, numbers, dashes and underscores."
+    ),
+  description: z.string().describe("The description of the project."),
+});
+
+export const CreateOrganizationToolScheme = z.object({
+  name: z
+    .string()
+    .describe(
+      "The name of the organization. Must be between 3 and 32 characters long, with only lowercase letters, numbers, dashes and underscores."
+    ),
 });
 
 // Query params types
