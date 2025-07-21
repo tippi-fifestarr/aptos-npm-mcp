@@ -1,10 +1,10 @@
 # How to Integrate Gas Station for Sponsored Transactions
 
-Gas Station lets your dApp pay gas fees for users, removing the "first-buy-APT" hurdle and smoothing onboarding. Use it when you want newcomers to transact with empty wallets or need precise control over which functions are subsidized.
+Gas Station lets your dApp pay gas fees for users, removing the "first, buy APT" hurdle and smoothing onboarding. Use it when you want newcomers to transact with empty wallets or need precise control over which functions are subsidized. 
 
 ## Prerequisites
 
-Make sure you have published your Move module and have the module address.
+Make sure you have published your Move module to Testnet or Mainnet and have the module address. If your contract is on Devnet, you'll need to redeploy.
 
 ## Backend Setup in Aptos Build
 
@@ -30,7 +30,7 @@ This is the preferred method recommended by the Aptos team. It integrates seamle
 1. **Install required dependencies**:
 
 ```bash
-npm install @aptos-labs/ts-sdk@^3.1.1 @aptos-labs/gas-station-client@^1.1.1 @aptos-labs/wallet-adapter-core@^6.0.0 @aptos-labs/wallet-adapter-react@^7.0.0
+npm install @aptos-labs/ts-sdk@latest @aptos-labs/gas-station-client@latest @aptos-labs/wallet-adapter-react@latest
 ```
 
 2. **Configure Gas Station client and Aptos SDK**:
@@ -39,15 +39,16 @@ npm install @aptos-labs/ts-sdk@^3.1.1 @aptos-labs/gas-station-client@^1.1.1 @apt
 // src/lib/gasStation.ts
 import { AptosConfig, Aptos, Network } from "@aptos-labs/ts-sdk";
 import { createGasStationClient } from "@aptos-labs/gas-station-client";
+// use process.env or set up variables 
 
-const network = process.env.NEXT_PUBLIC_NETWORK === 'mainnet'
+const network = PUBLIC_NETWORK === 'mainnet'
   ? Network.MAINNET
   : Network.TESTNET;
 
 // Create Gas Station client
 const gasStationClient = createGasStationClient({
   network,
-  apiKey: process.env.NEXT_PUBLIC_GAS_STATION_API_KEY!,
+  apiKey: GAS_STATION_API_KEY!,
 });
 
 // Configure Aptos client with Gas Station plugin
@@ -68,16 +69,14 @@ export const aptos = new Aptos(config);
 import { AptosWalletAdapterProvider } from "@aptos-labs/wallet-adapter-react";
 import { type PropsWithChildren } from "react";
 import { Network } from "@aptos-labs/ts-sdk";
-import { aptos } from "../lib/gasStation";
+import { aptos } from "../lib/gasStation"; // this has our network definition
 
 export const WalletProvider = ({ children }: PropsWithChildren) => {
   return (
     <AptosWalletAdapterProvider
       autoConnect={true}
       dappConfig={{
-        network: process.env.NEXT_PUBLIC_NETWORK === 'mainnet'
-          ? Network.MAINNET
-          : Network.TESTNET,
+        network,
         transactionSubmitter: aptos.config.getTransactionSubmitter(),
       }}
       onError={(error) => {
@@ -93,32 +92,35 @@ export const WalletProvider = ({ children }: PropsWithChildren) => {
 4. **Set up environment variables**:
 
 ```env
-NEXT_PUBLIC_GAS_STATION_API_KEY=aptoslabs_YOUR_API_KEY_HERE
-NEXT_PUBLIC_MODULE_ADDR=0x...your_contract_address
-NEXT_PUBLIC_NETWORK=testnet
+GAS_STATION_API_KEY=aptoslabs_YOUR_API_KEY_HERE
+MODULE_ADDR=0x...your_contract_address
+PUBLIC_NETWORK=testnet
 ```
 
 5. **Use standard wallet adapter flow**:
 
 ```tsx
 // src/components/SponsoredTransaction.tsx
-import { useWallet } from "@aptos-labs/wallet-adapter-react";
+import { useWallet, type InputTransactionData } from "@aptos-labs/wallet-adapter-react";
 
 export const SponsoredTransaction = () => {
   const { account, signAndSubmitTransaction } = useWallet();
 
   const handleSponsoredTransaction = async () => {
-    if (!account) return;
+    if (!account) {
+      throw new Error("Unable to find account to sign transaction");
+    }
 
     try {
-      // Standard wallet adapter flow - Gas Station handles sponsorship automatically
-      const response = await signAndSubmitTransaction({
+      const transaction: InputTransactionData = {
         data: {
-          function: `${process.env.NEXT_PUBLIC_MODULE_ADDR}::your_module::your_function`,
-          functionArguments: ["arg1", "arg2"],
+          function: "<module_address>::<module_name>::<function_name>",
+          functionArguments: [<function_arguments>],
         },
-        withFeePayer: true, // Enable gas sponsorship
-      });
+        withFeePayer: true,
+      };
+
+      const response = await signAndSubmitTransaction(transaction);
 
       console.log("✅ Sponsored transaction hash:", response.hash);
     } catch (error) {
@@ -160,7 +162,7 @@ export const SponsoredTransactionWithCaptcha = () => {
       // Submit transaction with reCAPTCHA token
       const response = await signAndSubmitTransaction({
         data: {
-          function: `${process.env.NEXT_PUBLIC_MODULE_ADDR}::your_module::your_function`,
+          function: `${MODULE_ADDR}::your_module::your_function`,
           functionArguments: ["arg1", "arg2"],
         },
         withFeePayer: true,
@@ -201,7 +203,7 @@ const network = Network.TESTNET;
 // Create separate Gas Station client for manual use
 const gasStationClient = createGasStationClient({
   network,
-  apiKey: process.env.NEXT_PUBLIC_GAS_STATION_API_KEY!,
+  apiKey: GAS_STATION_API_KEY!,
 });
 
 // Create standard Aptos client for building transactions
@@ -218,7 +220,7 @@ export const submitSponsoredTransactionManually = async (
     sender: userAddress,
     withFeePayer: true,
     data: {
-      function: `${process.env.NEXT_PUBLIC_MODULE_ADDR}::${functionName}`,
+      function: `${MODULE_ADDR}::${functionName}`,
       functionArguments,
     },
     options: {

@@ -111,9 +111,9 @@ npm install @apollo/client graphql
 2. **Set up environment variables**:
 
 ```env
-NEXT_PUBLIC_INDEXER_API_KEY=aptoslabs_YOUR_API_KEY_HERE
-NEXT_PUBLIC_INDEXER_ENDPOINT=https://api.testnet.aptoslabs.com/nocode/v1/api/YOUR_PROCESSOR_ID/v1/graphql
-NEXT_PUBLIC_NETWORK=testnet
+INDEXER_API_KEY=aptoslabs_YOUR_API_KEY_HERE
+INDEXER_ENDPOINT=https://api.testnet.aptoslabs.com/nocode/v1/api/YOUR_PROCESSOR_ID/v1/graphql
+PUBLIC_NETWORK=testnet
 ```
 
 3. **Create GraphQL client**:
@@ -124,14 +124,14 @@ import { ApolloClient, InMemoryCache, createHttpLink } from '@apollo/client';
 import { setContext } from '@apollo/client/link/context';
 
 const httpLink = createHttpLink({
-  uri: process.env.NEXT_PUBLIC_INDEXER_ENDPOINT,
+  uri: INDEXER_ENDPOINT,
 });
 
 const authLink = setContext((_, { headers }) => {
   return {
     headers: {
       ...headers,
-      authorization: `Bearer ${process.env.NEXT_PUBLIC_INDEXER_API_KEY}`,
+      authorization: `Bearer ${INDEXER_API_KEY}`,
     }
   }
 });
@@ -218,7 +218,7 @@ export const EventsList = () => {
           <p><strong>Message:</strong> {event.message}</p>
           <p><strong>Time:</strong> {new Date(event.timestamp).toLocaleString()}</p>
           <a 
-            href={`https://explorer.aptoslabs.com/txn/${event.transaction_hash}?network=${process.env.NEXT_PUBLIC_NETWORK}`}
+            href={`https://explorer.aptoslabs.com/txn/${event.transaction_hash}?network=${PUBLIC_NETWORK}`}
             target="_blank"
             rel="noopener noreferrer"
           >
