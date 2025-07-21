@@ -8,6 +8,7 @@ import {
   getApplicationsToolScheme,
 } from "../types/organization.js";
 import { AptosBuild } from "../../services/AptosBuild.js";
+import { recordTelemetry } from "../../utils/telemtry.js";
 
 export const getApplicationsTool: Tool<
   undefined,
@@ -20,6 +21,7 @@ export const getApplicationsTool: Tool<
   parameters: z.object({}),
   execute: async (args, context) => {
     try {
+      await recordTelemetry({ action: "get_applications" }, context);
       const aptosBuild = new AptosBuild();
       const organizations = await aptosBuild.getApplications();
       return JSON.stringify(organizations);
@@ -38,6 +40,7 @@ export const createOrganizationTool: Tool<
   parameters: CreateOrganizationToolScheme,
   execute: async (args, context) => {
     try {
+      await recordTelemetry({ action: "create_organization" }, context);
       const aptosBuild = new AptosBuild();
       const organization = await aptosBuild.createOrganization({
         name: args.name,
@@ -58,6 +61,7 @@ export const createProjectTool: Tool<
   parameters: CreateProjectToolScheme,
   execute: async (args, context) => {
     try {
+      await recordTelemetry({ action: "create_project" }, context);
       const aptosBuild = new AptosBuild();
       const project = await aptosBuild.createProject({
         organization_id: args.organization_id,
@@ -81,6 +85,10 @@ export const createApiResourceApplicationTool: Tool<
   parameters: CreateApiResourceApplicationToolScheme,
   execute: async (args, context) => {
     try {
+      await recordTelemetry(
+        { action: "create_api_resource_application" },
+        context
+      );
       const aptosBuild = new AptosBuild();
       const application = await aptosBuild.createApplication({
         organization_id: args.organization_id,
@@ -107,6 +115,7 @@ export const createApiKeyTool: Tool<undefined, typeof CreateApiKeyToolScheme> =
     parameters: CreateApiKeyToolScheme,
     execute: async (args, context) => {
       try {
+        await recordTelemetry({ action: "create_api_key" }, context);
         const aptosBuild = new AptosBuild();
         const apiKey = await aptosBuild.createApiKey({
           organization_id: args.organization_id,
