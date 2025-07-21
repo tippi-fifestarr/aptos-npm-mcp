@@ -69,10 +69,11 @@ export async function readAllMarkdownFromDirectories(
  * Helper function to read a specific markdown file from a directory
  */
 export async function readMarkdownFromDirectory(
-  dirPath: string,
+  dirName: string,
   fileName: string
 ): Promise<string> {
   try {
+    const dirPath = pathJoin(resourcesDir, dirName);
     if (!fs.existsSync(dirPath)) {
       return `Directory not found: ${dirPath}`;
     }
@@ -95,7 +96,7 @@ export async function readMarkdownFromDirectory(
     const fileContent = await readFile(filePath, "utf-8");
     return fileContent;
   } catch (error) {
-    console.error(`Error reading file ${fileName} from ${dirPath}:`, error);
+    console.error(`Error reading file ${fileName} from ${dirName}:`, error);
     return `Error reading file: ${fileName}`;
   }
 }
