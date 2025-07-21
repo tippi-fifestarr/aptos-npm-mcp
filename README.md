@@ -25,23 +25,7 @@ To be able to make [Aptos Build](https://build.aptoslabs.com/) actions like gene
 
 ### Start vibe coding.
 
-3.  Prompt the agent with the action you want it to do. For best results, try be as much as specific as you can.
-    1. build a full end-to-end dapp on Aptos
-       ```text
-       Help me build a todo list dapp on Aptos. Build the smart contract to handle the dapp logic and help me with deplyoing the contract, the frontend for the UI and wallet connection for users to be able to connect with their wallet.
-       ```
-    2. Build a frontend of a < whatever > dapp on Aptos
-       ```text
-       Help me build a frontend for a todo list dapp on Aptos. Build the UI and wallet connection for users to be able to connect with their wallet.
-       ```
-    3. Write a smart contract for < whatever > on Aptos
-       ```text
-       Help me build a smart contract for a todo list dapp on Aptos. Build the smart contract to handle the dapp logic. Also, help with with deploying the contract.
-       ```
-    4. Get all projects in your Build account
-       ```text
-       Get all of my Aptos build projects
-       ```
+Make sure to read the [user guide](./integration_guides/user_guide.md) for best results.
 
 ## Development
 
