@@ -89,7 +89,7 @@ query {
    - Copy the API key (starts with `aptoslabs_...`)
    - Note your processor ID from the API URL
 
-**Note**: For enhanced rate limits when making additional SDK calls alongside your indexer queries, consider also setting up Full Node API keys. See [how_to_manage_api_keys_as_project_resources.md](./how_to_manage_api_keys_as_project_resources.md) for details.
+**Note**: For enhanced rate limits when making additional SDK calls alongside your indexer queries, consider also setting up Full Node API keys. See [Full Node API Key Configuration](./how_to_config_a_full_node_api_key_in_a_dapp.md) for details.
 
 2. **Test with curl**:
 
@@ -384,4 +384,4 @@ export const useIndexedDataWithRetry = (query: any, variables: any) => {
 - Implement pagination for large datasets
 - Consider caching strategies for frequently accessed data
 - Test thoroughly on testnet before mainnet deployment
-- For additional API key management best practices, see [how_to_manage_api_keys_as_project_resources.md](./how_to_manage_api_keys_as_project_resources.md)
+- For additional API key management best practices, see [Full Node API Key Configuration](./how_to_config_a_full_node_api_key_in_a_dapp.md)

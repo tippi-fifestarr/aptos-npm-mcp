@@ -50,7 +50,7 @@ Indexer keys are automatically generated when you create a Processor project:
 
 For detailed implementation instructions, see these specific guides:
 
-- **[API Keys Management](../how_to/how_to_manage_api_keys_as_project_resources.md)**: Detailed guide on creating and managing Full Node API keys
+- **[Full Node API Key Configuration](../how_to/how_to_config_a_full_node_api_key_in_a_dapp.md)**: Detailed guide on creating and managing Full Node API keys
 - **[Gas Station Integration](../how_to/how_to_integrate_gas_station.md)**: Complete guide on integrating Gas Station for gasless transactions
 - **[No-Code Indexer Integration](../how_to/how_to_integrate_no_code_indexer_build.md)**: Step-by-step guide for setting up and using the No-Code Indexer
 

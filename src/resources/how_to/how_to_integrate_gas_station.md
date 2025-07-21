@@ -21,7 +21,7 @@ Make sure you have published your Move module to Testnet or Mainnet and have the
 
 4. Create the Gas Station and copy the auto-generated GAS STATION API key (`aptoslabs_xxx...`).
 
-**Note**: For enhanced rate limits and better performance when making SDK calls to read blockchain data, consider also setting up Full Node API keys. See [how_to_manage_api_keys_as_project_resources.md](./how_to_manage_api_keys_as_project_resources.md) for details.
+**Note**: For enhanced rate limits and better performance when making SDK calls to read blockchain data, consider also setting up Full Node API keys. See [Full Node API Key Configuration](./how_to_config_a_full_node_api_key_in_a_dapp.md) for details.
 
 ## Frontend Integration (Plugin Approach - Recommended)
 
@@ -297,7 +297,7 @@ export const handleGasStationError = (error: any) => {
 - **Test thoroughly** on testnet before mainnet deployment
 - **Implement proper error handling** for better user experience
 - **Use reCAPTCHA** for public-facing applications to prevent abuse
-- **Keep API keys secure** and use environment variables (see [how_to_manage_api_keys_as_project_resources.md](./how_to_manage_api_keys_as_project_resources.md) for best practices)
+- **Keep API keys secure** and use environment variables (see [Full Node API Key Configuration](./how_to_config_a_full_node_api_key_in_a_dapp.md) for best practices)
 
 ## Official Resources
 
