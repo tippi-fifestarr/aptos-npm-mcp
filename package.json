@@ -1,7 +1,28 @@
 {
-  "name": "aptos-npm-mcp",
-  "version": "1.0.0",
+  "name": "@aptos-labs/aptos-mcp",
+  "version": "0.0.0",
   "main": "dist/index.js",
+  "keywords": [
+    "mcp",
+    "vibe code",
+    "aptos mcp"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/aptos-labs/aptos-npm-mcp"
+  },
+  "homepage": "https://github.com/aptos-labs/aptos-npm-mcp/blob/main/README.md",
+  "bugs": {
+    "url": "https://github.com/aptos-labs/aptos-npm-mcp/issues"
+  },
+  "license": "Apache-2.0",
+  "author": "aptoslabs.com",
+  "type": "module",
+  "description": "A MCP server for Aptos NPM packages",
+  "files": [
+    "dist",
+    "package.json"
+  ],
   "scripts": {
     "build": "rm -rf dist && tsc && cp -r src/resources dist/",
     "start": "npm run build && tsx src/server.ts",
@@ -10,19 +31,6 @@
     "test": "vitest run",
     "format": "prettier --write . && eslint --fix ."
   },
-  "keywords": [
-    "fastmcp",
-    "mcp",
-    "boilerplate"
-  ],
-  "author": "aptos.labs",
-  "type": "module",
-  "license": "Apache-2.0",
-  "description": "A MCP server for Aptos NPM packages",
-  "files": [
-    "dist",
-    "package.json"
-  ],
   "dependencies": {
     "@aptos-labs/api-gateway-admin-api-client": "^2.1.0",
     "dotenv": "^16.6.1",
