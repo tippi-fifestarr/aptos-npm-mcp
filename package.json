@@ -31,6 +31,8 @@
     "build": "rm -rf dist && tsc && cp -r src/resources dist/",
     "start": "npm run build && tsx src/server.ts",
     "dev": "npm run build && fastmcp dev src/server.ts",
+    "prepublishOnly": "node ./scripts/inject-client-id.js && npm run build",
+    "postpublish": "node ./scripts/restore-client-id.js",
     "lint": "prettier --check . && eslint . && tsc --noEmit",
     "test": "vitest run",
     "format": "prettier --write . && eslint --fix ."

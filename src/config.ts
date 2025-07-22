@@ -4,7 +4,7 @@ import dotenv from "dotenv";
 dotenv.config();
 
 const GA_MEASURMENT_ID = "G-LXY7NNQBTG";
-const GA_CLIENT_ID = "Xd0kWjPMTYmkWz-6l6ywfA";
+const GA_CLIENT_ID = process.env.GA_CLIENT_ID;
 
 // Aptos MCP configuration
 export const config = {
