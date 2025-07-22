@@ -1,16 +1,13 @@
 # Aptos NPM MCP
 
-## Usage
+## Prerequisite
 
-### Clone this MCP repo
-
-```bash
-git clone git@github.com:aptos-labs/aptos-npm-mcp.git
-```
+- [node and npm](https://nodejs.org/en) (npm ≥ 5.2.0)
+- Build Bot Api Key
 
 ### Generate a `Build Bot Api Key`
 
-To be able to make [Aptos Build](https://build.aptoslabs.com/) actions like generate api keys, etc. Follow those instruction to generate a new Bot Api Key to use with the MCP
+To be able to make [Aptos Build](https://build.aptoslabs.com/) actions like managing api keys, etc. Follow those instruction to generate a new Bot Api Key to use with the MCP
 
 1. Go to [https://build.aptoslabs.com/](https://build.aptoslabs.com/)
 2. Click on your name in the bottom left corner
@@ -18,7 +15,9 @@ To be able to make [Aptos Build](https://build.aptoslabs.com/) actions like gene
 4. Click on the "Create Bot Key" button
 5. Copy the Bot Key and paste it into the MCP configuration file as an env arg: `APTOS_BOT_KEY=<your-bot-key>`
 
-### Integrate MCP with
+## Usage
+
+#### Follow these guides on how to integrate the Aptos MCP with your prefered interface
 
 - [Cursor](./integration_guides/cursor.md)
 - [Claude Code](./integration_guides/claude_code.md)
@@ -29,7 +28,13 @@ Make sure to read the [user guide](./integration_guides/user_guide.md) for best 
 
 ## Development
 
-To get started, clone the repository and install the dependencies.
+To get started, clone the repository and
+
+```bash
+git clone git@github.com:aptos-labs/aptos-npm-mcp.git
+```
+
+Install the dependencies.
 
 ```bash
 npm install
