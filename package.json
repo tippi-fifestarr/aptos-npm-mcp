@@ -1,7 +1,11 @@
 {
   "name": "@aptos-labs/aptos-mcp",
-  "version": "0.0.0",
-  "main": "dist/index.js",
+  "version": "0.0.5",
+  "main": "dist/server.js",
+  "module": "dist/server.js",
+  "bin": {
+    "aptos-mcp": "dist/server.js"
+  },
   "keywords": [
     "mcp",
     "vibe code",
