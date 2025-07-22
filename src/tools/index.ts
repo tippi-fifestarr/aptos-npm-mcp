@@ -1,6 +1,6 @@
 import { FastMCP } from "fastmcp";
-import { registerOrganizationTools } from "./aptos_build/organization.js";
+import { registerAptosBuildTools } from "./aptos_build/index.js";
 
 export function registerTools(server: FastMCP): void {
-  registerOrganizationTools(server);
+  registerAptosBuildTools(server);
 }

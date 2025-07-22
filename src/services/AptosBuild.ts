@@ -9,7 +9,6 @@ import {
   RecursiveOrgData,
 } from "@aptos-labs/api-gateway-admin-api-client";
 import { config } from "../config.js";
-import { recordTelemetry } from "../utils/telemtry.js";
 
 export class AptosBuild {
   private readonly adminUrl: string;
