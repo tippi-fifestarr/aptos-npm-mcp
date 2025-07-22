@@ -44,6 +44,46 @@ export const CreateApiKeyToolScheme = z.object({
   }),
 });
 
+export const UpdateApiKeyToolScheme = z.object({
+  organization_id: z
+    .string()
+    .describe("The organization id to update the api key for."),
+  project_id: z.string().describe("The project id to update the api key for."),
+  application_id: z
+    .string()
+    .describe("The application id to update the api key for."),
+  current_api_key_name: z.string().describe("The current name of the api key."),
+  new_api_key_name: z
+    .string()
+    .describe("The new name of the api key.")
+    .optional(),
+  frontend_args: z
+    .object({
+      web_app_urls: z
+        .array(z.string())
+        .describe(
+          "The web app urls to allow the api key to access. If not provided, all URLs will be allowed."
+        )
+        .optional()
+        .default([]),
+      extension_ids: z
+        .array(z.string())
+        .describe(
+          "The extension ids to allow the api key to access. If not provided, all extension ids will be allowed."
+        )
+        .optional()
+        .default([]),
+      http_rate_limit_per_ip: z
+        .number()
+        .describe(
+          "The http rate limit per ip. If not provided, the default 2,000,000 Compute Units per 5 minutes rate limit will be used."
+        )
+        .optional()
+        .default(2000000),
+    })
+    .optional(),
+});
+
 export const CreateApiResourceApplicationToolScheme = z.object({
   organization_id: z
     .string()
