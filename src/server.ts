@@ -10,13 +10,18 @@ import { config } from "./config.js";
 import { basename, extname, join as pathJoin } from "node:path";
 import fs from "node:fs";
 
+import packageJson from "../package.json" with { type: "json" };
+
+export const VERSION = packageJson.version;
+
 async function main() {
   /**
    * Create a new FastMCP server
    */
+
   const server = new FastMCP({
     name: config.server.name,
-    version: "0.0.10",
+    version: VERSION as `${number}.${number}.${number}`,
   });
 
   registerTools(server);
