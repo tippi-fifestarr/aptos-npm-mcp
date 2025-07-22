@@ -192,4 +192,39 @@ export class AptosBuild {
       throw new Error(`Failed to create api key: ${String(error)}`);
     }
   }
+
+  async updateApiKey({
+    organization_id,
+    project_id,
+    application_id,
+    current_api_key_name,
+    new_api_key_name,
+    frontend_args,
+  }: {
+    organization_id: string;
+    project_id: string;
+    application_id: string;
+    current_api_key_name: string;
+    new_api_key_name: string;
+    frontend_args: CreateApiKeyFrontendArgs | null;
+  }): Promise<ApiKey> {
+    try {
+      const adminApiClient = this.createApiClient({
+        "x-jwt-organization-id": organization_id,
+        "x-jwt-project-id": project_id,
+        "x-jwt-application-id": application_id,
+      });
+      const apiKey = await adminApiClient.mutation([
+        "editApiKey",
+        {
+          current_api_key_name: current_api_key_name,
+          new_api_key_name: new_api_key_name,
+          frontend_args: frontend_args,
+        },
+      ]);
+      return apiKey;
+    } catch (error) {
+      throw new Error(`Failed to update api key: ${String(error)}`);
+    }
+  }
 }

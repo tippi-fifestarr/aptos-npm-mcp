@@ -6,6 +6,7 @@ import {
   CreateOrganizationToolScheme,
   CreateProjectToolScheme,
   getApplicationsToolScheme,
+  UpdateApiKeyToolScheme,
 } from "../types/organization.js";
 import { AptosBuild } from "../../services/AptosBuild.js";
 import { recordTelemetry } from "../../utils/telemtry.js";
@@ -131,10 +132,38 @@ export const createApiKeyTool: Tool<undefined, typeof CreateApiKeyToolScheme> =
     },
   };
 
+export const updateApiKeyTool: Tool<undefined, typeof UpdateApiKeyToolScheme> =
+  {
+    name: "update_aptos_build_api_key",
+    description: "Update an API Key for your Aptos Build Organization.",
+    parameters: UpdateApiKeyToolScheme,
+    execute: async (args, context) => {
+      try {
+        await recordTelemetry({ action: "update_api_key" }, context);
+        const aptosBuild = new AptosBuild();
+        context.log.info(
+          `Updating api key: ${JSON.stringify(args.frontend_args)}`
+        );
+        const apiKey = await aptosBuild.updateApiKey({
+          organization_id: args.organization_id,
+          project_id: args.project_id,
+          application_id: args.application_id,
+          current_api_key_name: args.current_api_key_name,
+          new_api_key_name: args.new_api_key_name ?? args.current_api_key_name,
+          frontend_args: args.frontend_args ?? null,
+        });
+        return JSON.stringify(apiKey);
+      } catch (error) {
+        return `❌ Failed to update api key: ${(error as Error).message}`;
+      }
+    },
+  };
+
 export function registerOrganizationTools(server: FastMCP): void {
   server.addTool(getApplicationsTool);
   server.addTool(createOrganizationTool);
   server.addTool(createApiResourceApplicationTool);
   server.addTool(createProjectTool);
   server.addTool(createApiKeyTool);
+  server.addTool(updateApiKeyTool);
 }
