@@ -1,7 +1,7 @@
-import { readFile } from "fs/promises";
-import { join as pathJoin, dirname, extname } from "path";
-import { fileURLToPath } from "url";
 import * as fs from "fs";
+import { readFile } from "fs/promises";
+import { dirname, extname, join as pathJoin } from "path";
+import { fileURLToPath } from "url";
 
 // Get __dirname equivalent in ES modules
 const __filename = fileURLToPath(import.meta.url);
@@ -10,10 +10,30 @@ const __dirname = dirname(__filename);
 const resourcesDir = pathJoin(__dirname, "..", "resources");
 
 /**
+ * Helper function to read all markdown files from multiple directories
+ */
+export async function readAllMarkdownFromDirectories(
+  dirNames: string[],
+): Promise<string> {
+  let combinedContent = "";
+
+  for (const dirName of dirNames) {
+    const dirPath = pathJoin(resourcesDir, dirName);
+    const dirContent = await readAllMarkdownFromDirectory(dirPath);
+    if (dirContent.trim()) {
+      combinedContent += `# ${dirName.toUpperCase()} RESOURCES\n\n`;
+      combinedContent += dirContent;
+    }
+  }
+
+  return combinedContent;
+}
+
+/**
  * Helper function to read all markdown files from a directory
  */
 export async function readAllMarkdownFromDirectory(
-  dirPath: string
+  dirPath: string,
 ): Promise<string> {
   let content = "";
 
@@ -24,7 +44,7 @@ export async function readAllMarkdownFromDirectory(
 
     const files = fs.readdirSync(dirPath);
     const markdownFiles = files.filter(
-      (file: string) => extname(file).toLowerCase() === ".md"
+      (file: string) => extname(file).toLowerCase() === ".md",
     );
 
     for (const file of markdownFiles) {
@@ -46,31 +66,11 @@ export async function readAllMarkdownFromDirectory(
 }
 
 /**
- * Helper function to read all markdown files from multiple directories
- */
-export async function readAllMarkdownFromDirectories(
-  dirNames: string[]
-): Promise<string> {
-  let combinedContent = "";
-
-  for (const dirName of dirNames) {
-    const dirPath = pathJoin(resourcesDir, dirName);
-    const dirContent = await readAllMarkdownFromDirectory(dirPath);
-    if (dirContent.trim()) {
-      combinedContent += `# ${dirName.toUpperCase()} RESOURCES\n\n`;
-      combinedContent += dirContent;
-    }
-  }
-
-  return combinedContent;
-}
-
-/**
  * Helper function to read a specific markdown file from a directory
  */
 export async function readMarkdownFromDirectory(
   dirName: string,
-  fileName: string
+  fileName: string,
 ): Promise<string> {
   try {
     const dirPath = pathJoin(resourcesDir, dirName);

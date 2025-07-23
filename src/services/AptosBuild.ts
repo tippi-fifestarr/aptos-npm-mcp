@@ -8,11 +8,12 @@ import {
   Project,
   RecursiveOrgData,
 } from "@aptos-labs/api-gateway-admin-api-client";
+
 import { config } from "../config.js";
 
 export class AptosBuild {
-  private readonly adminUrl: string;
   protected readonly headers: Record<string, string>;
+  private readonly adminUrl: string;
 
   constructor() {
     if (!config.aptos_build.botKey) {
@@ -22,7 +23,7 @@ export class AptosBuild {
         2. Click on your name in the bottom left corner
         3. Click on "Bot Keys"
         4. Click on the "Create Bot Key" button
-        5. Copy the Bot Key and paste it into the MCP configuration file as an env arg: APTOS_BOT_KEY=<your-bot-key>`
+        5. Copy the Bot Key and paste it into the MCP configuration file as an env arg: APTOS_BOT_KEY=<your-bot-key>`,
       );
     }
     this.adminUrl = config.aptos_build.adminUrl;
@@ -32,51 +33,68 @@ export class AptosBuild {
     };
   }
 
-  private createCustomFetch = (
-    additionalHeaders: Record<string, string> = {}
-  ) => {
-    return async (
-      input: string | URL | Request,
-      init?: RequestInit
-    ): Promise<Response> => {
-      const headers = new Headers(init?.headers);
-
-      const bearerToken = process.env.APTOS_BOT_KEY;
-
-      headers.set("Authorization", `Bearer ${bearerToken}`);
-      headers.set("x-is-aptos-bot", "true");
-
-      Object.entries(additionalHeaders).forEach(([key, value]) => {
-        headers.set(key, value);
+  /**
+   * Create a new API Key for an application.
+   * @returns ApiKey
+   */
+  async createApiKey({
+    application_id,
+    frontend_args,
+    name,
+    organization_id,
+    project_id,
+  }: {
+    application_id: string;
+    frontend_args: CreateApiKeyFrontendArgs | null;
+    name: string;
+    organization_id: string;
+    project_id: string;
+  }): Promise<ApiKey> {
+    try {
+      const adminApiClient = this.createApiClient({
+        "x-jwt-application-id": application_id,
+        "x-jwt-organization-id": organization_id,
+        "x-jwt-project-id": project_id,
       });
-
-      return fetch(input, {
-        ...init,
-        headers,
-      });
-    };
-  };
-
-  protected createApiClient(additionalHeaders: Record<string, string> = {}) {
-    return createAdminApiClient({
-      apiUrl: this.adminUrl,
-      customFetch: this.createCustomFetch(additionalHeaders),
-    });
+      const apiKey = await adminApiClient.mutation([
+        "createApiKeyV2",
+        {
+          frontend_args,
+          name,
+        },
+      ]);
+      return apiKey;
+    } catch (error) {
+      throw new Error(`Failed to create api key: ${String(error)}`);
+    }
   }
 
   /**
-   * Get all organizations with their projects and applications and the API Keys.
-   * @returns RecursiveOrgData[]
+   * Create a new Application for a project.
+   * Application can be of type Full Node API, Gas Station.
+   * @returns Application
    */
-  async getApplications(): Promise<RecursiveOrgData[]> {
+  async createApplication({
+    args,
+    organization_id,
+    project_id,
+  }: {
+    args: CreateApplicationArgs;
+    organization_id: string;
+    project_id: string;
+  }): Promise<Application> {
     try {
-      const adminApiClient = this.createApiClient();
-      const organizations = await adminApiClient.query([
-        "getOrganizationsRecursively",
+      const adminApiClient = this.createApiClient({
+        "x-jwt-organization-id": organization_id,
+        "x-jwt-project-id": project_id,
+      });
+      const application = await adminApiClient.mutation([
+        "createApplicationV2",
+        args,
       ]);
-      return organizations;
+      return application;
     } catch (error) {
-      throw new Error(`Failed to get organizations: ${String(error)}`);
+      throw new Error(`Failed to create application: ${String(error)}`);
     }
   }
 
@@ -102,13 +120,13 @@ export class AptosBuild {
    * @returns Project
    */
   async createProject({
+    description,
     organization_id,
     project_name,
-    description,
   }: {
+    description: string;
     organization_id: string;
     project_name: string;
-    description: string;
   }): Promise<Project> {
     try {
       const adminApiClient = this.createApiClient({
@@ -117,8 +135,8 @@ export class AptosBuild {
       const project = await adminApiClient.mutation([
         "createProject",
         {
-          project_name,
           description,
+          project_name,
         },
       ]);
       return project;
@@ -128,97 +146,48 @@ export class AptosBuild {
   }
 
   /**
-   * Create a new Application for a project.
-   * Application can be of type Full Node API, Gas Station.
-   * @returns Application
+   * Get all organizations with their projects and applications and the API Keys.
+   * @returns RecursiveOrgData[]
    */
-  async createApplication({
-    organization_id,
-    project_id,
-    args,
-  }: {
-    organization_id: string;
-    project_id: string;
-    args: CreateApplicationArgs;
-  }): Promise<Application> {
+  async getApplications(): Promise<RecursiveOrgData[]> {
     try {
-      const adminApiClient = this.createApiClient({
-        "x-jwt-organization-id": organization_id,
-        "x-jwt-project-id": project_id,
-      });
-      const application = await adminApiClient.mutation([
-        "createApplicationV2",
-        args,
+      const adminApiClient = this.createApiClient();
+      const organizations = await adminApiClient.query([
+        "getOrganizationsRecursively",
       ]);
-      return application;
+      return organizations;
     } catch (error) {
-      throw new Error(`Failed to create application: ${String(error)}`);
-    }
-  }
-
-  /**
-   * Create a new API Key for an application.
-   * @returns ApiKey
-   */
-  async createApiKey({
-    organization_id,
-    project_id,
-    application_id,
-    name,
-    frontend_args,
-  }: {
-    organization_id: string;
-    project_id: string;
-    application_id: string;
-    name: string;
-    frontend_args: CreateApiKeyFrontendArgs | null;
-  }): Promise<ApiKey> {
-    try {
-      const adminApiClient = this.createApiClient({
-        "x-jwt-organization-id": organization_id,
-        "x-jwt-project-id": project_id,
-        "x-jwt-application-id": application_id,
-      });
-      const apiKey = await adminApiClient.mutation([
-        "createApiKeyV2",
-        {
-          name,
-          frontend_args,
-        },
-      ]);
-      return apiKey;
-    } catch (error) {
-      throw new Error(`Failed to create api key: ${String(error)}`);
+      throw new Error(`Failed to get organizations: ${String(error)}`);
     }
   }
 
   async updateApiKey({
-    organization_id,
-    project_id,
     application_id,
     current_api_key_name,
-    new_api_key_name,
     frontend_args,
+    new_api_key_name,
+    organization_id,
+    project_id,
   }: {
-    organization_id: string;
-    project_id: string;
     application_id: string;
     current_api_key_name: string;
-    new_api_key_name: string;
     frontend_args: CreateApiKeyFrontendArgs | null;
+    new_api_key_name: string;
+    organization_id: string;
+    project_id: string;
   }): Promise<ApiKey> {
     try {
       const adminApiClient = this.createApiClient({
+        "x-jwt-application-id": application_id,
         "x-jwt-organization-id": organization_id,
         "x-jwt-project-id": project_id,
-        "x-jwt-application-id": application_id,
       });
       const apiKey = await adminApiClient.mutation([
         "editApiKey",
         {
           current_api_key_name: current_api_key_name,
-          new_api_key_name: new_api_key_name,
           frontend_args: frontend_args,
+          new_api_key_name: new_api_key_name,
         },
       ]);
       return apiKey;
@@ -226,4 +195,36 @@ export class AptosBuild {
       throw new Error(`Failed to update api key: ${String(error)}`);
     }
   }
+
+  protected createApiClient(additionalHeaders: Record<string, string> = {}) {
+    return createAdminApiClient({
+      apiUrl: this.adminUrl,
+      customFetch: this.createCustomFetch(additionalHeaders),
+    });
+  }
+
+  private createCustomFetch = (
+    additionalHeaders: Record<string, string> = {},
+  ) => {
+    return async (
+      input: Request | string | URL,
+      init?: RequestInit,
+    ): Promise<Response> => {
+      const headers = new Headers(init?.headers);
+
+      const bearerToken = process.env.APTOS_BOT_KEY;
+
+      headers.set("Authorization", `Bearer ${bearerToken}`);
+      headers.set("x-is-aptos-bot", "true");
+
+      Object.entries(additionalHeaders).forEach(([key, value]) => {
+        headers.set(key, value);
+      });
+
+      return fetch(input, {
+        ...init,
+        headers,
+      });
+    };
+  };
 }
