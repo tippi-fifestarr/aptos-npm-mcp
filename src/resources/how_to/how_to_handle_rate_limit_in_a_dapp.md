@@ -39,7 +39,7 @@ First, check if the dapp has an `APTOS_API_KEY` configured:
      new AptosConfig({
        network: NETWORK,
        clientConfig: { API_KEY: process.env.APTOS_API_KEY },
-     })
+     }),
    );
    ```
 

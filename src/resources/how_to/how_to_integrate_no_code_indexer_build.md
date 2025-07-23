@@ -13,6 +13,7 @@ No-Code Indexing allows you to create real-time blockchain data indexers without
 1. Go to [Aptos Build](https://build.aptoslabs.com/) and sign in with your account.
 
 2. Create a new project:
+
    - Click "Create New Project" from the dashboard
    - Choose "Processor" as the project type
    - Name your project (3-32 characters, lowercase, numbers, `_` or `-`)
@@ -26,22 +27,26 @@ No-Code Indexing allows you to create real-time blockchain data indexers without
 2. **Select network** (Testnet or Mainnet) matching where your contract is deployed.
 
 3. **Choose starting version**:
+
    - Use "Current Version" if you just deployed and have no events yet
    - Use a specific transaction version if you want to index from contract deployment
    - Find the deployment transaction in [Aptos Explorer](https://explorer.aptoslabs.com/) if needed
 
 4. **Configure the visual processor**:
+
    - Add your contract address as an Event Data Source
    - Select the specific event you want to index
    - Create a new table as Data Destination
    - Name your table descriptively (e.g., `billboard_messages`)
 
 5. **Define table schema**:
+
    - Add columns matching your event fields
    - Set appropriate data types (text, integer, timestamp, etc.)
    - Configure primary keys if needed
 
 6. **Connect data flow**:
+
    - Drag connections from Event fields to Table columns
    - Map each event field to the corresponding table column
 
@@ -50,15 +55,18 @@ No-Code Indexing allows you to create real-time blockchain data indexers without
 ## Hasura Console Setup
 
 1. **Access Hasura Console**:
+
    - Once processor status shows "Running", click the Console URL
    - Enter the Hasura admin secret when prompted
 
 2. **Track your table**:
+
    - In the left sidebar, expand `processordb` → `public`
    - If your table appears in "Untracked tables", click "Track"
    - If already visible in the sidebar, it's already tracked
 
 3. **Configure permissions** (critical step):
+
    - Click on your table name in the left sidebar
    - Go to the "Permissions" tab
    - Click on "anonymous" role
@@ -120,8 +128,8 @@ PUBLIC_NETWORK=testnet
 
 ```tsx
 // src/lib/graphql.ts
-import { ApolloClient, InMemoryCache, createHttpLink } from '@apollo/client';
-import { setContext } from '@apollo/client/link/context';
+import { ApolloClient, InMemoryCache, createHttpLink } from "@apollo/client";
+import { setContext } from "@apollo/client/link/context";
 
 const httpLink = createHttpLink({
   uri: INDEXER_ENDPOINT,
@@ -132,8 +140,8 @@ const authLink = setContext((_, { headers }) => {
     headers: {
       ...headers,
       authorization: `Bearer ${INDEXER_API_KEY}`,
-    }
-  }
+    },
+  };
 });
 
 export const apolloClient = new ApolloClient({
@@ -163,8 +171,8 @@ export interface QueryResponse {
 
 ```tsx
 // src/hooks/useIndexedData.ts
-import { useQuery, gql } from '@apollo/client';
-import { QueryResponse } from '../types/indexer';
+import { useQuery, gql } from "@apollo/client";
+import { QueryResponse } from "../types/indexer";
 
 const GET_EVENTS = gql`
   query GetEvents($limit: Int, $offset: Int) {
@@ -183,10 +191,13 @@ const GET_EVENTS = gql`
 `;
 
 export const useIndexedData = (limit = 10, offset = 0) => {
-  const { data, loading, error, refetch } = useQuery<QueryResponse>(GET_EVENTS, {
-    variables: { limit, offset },
-    pollInterval: 5000, // Poll every 5 seconds for real-time updates
-  });
+  const { data, loading, error, refetch } = useQuery<QueryResponse>(
+    GET_EVENTS,
+    {
+      variables: { limit, offset },
+      pollInterval: 5000, // Poll every 5 seconds for real-time updates
+    },
+  );
 
   return {
     events: data?.your_table_name || [],
@@ -201,7 +212,7 @@ export const useIndexedData = (limit = 10, offset = 0) => {
 
 ```tsx
 // src/components/EventsList.tsx
-import { useIndexedData } from '../hooks/useIndexedData';
+import { useIndexedData } from "../hooks/useIndexedData";
 
 export const EventsList = () => {
   const { events, loading, error } = useIndexedData();
@@ -214,10 +225,16 @@ export const EventsList = () => {
       <h2>Recent Events</h2>
       {events.map((event) => (
         <div key={event.id} className="event-card">
-          <p><strong>From:</strong> {event.author_address}</p>
-          <p><strong>Message:</strong> {event.message}</p>
-          <p><strong>Time:</strong> {new Date(event.timestamp).toLocaleString()}</p>
-          <a 
+          <p>
+            <strong>From:</strong> {event.author_address}
+          </p>
+          <p>
+            <strong>Message:</strong> {event.message}
+          </p>
+          <p>
+            <strong>Time:</strong> {new Date(event.timestamp).toLocaleString()}
+          </p>
+          <a
             href={`https://explorer.aptoslabs.com/txn/${event.transaction_hash}?network=${PUBLIC_NETWORK}`}
             target="_blank"
             rel="noopener noreferrer"
@@ -235,8 +252,8 @@ export const EventsList = () => {
 
 ```tsx
 // src/app/layout.tsx or pages/_app.tsx
-import { ApolloProvider } from '@apollo/client';
-import { apolloClient } from '../lib/graphql';
+import { ApolloProvider } from "@apollo/client";
+import { apolloClient } from "../lib/graphql";
 
 export default function RootLayout({
   children,
@@ -246,9 +263,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
-        <ApolloProvider client={apolloClient}>
-          {children}
-        </ApolloProvider>
+        <ApolloProvider client={apolloClient}>{children}</ApolloProvider>
       </body>
     </html>
   );
@@ -290,10 +305,7 @@ query GetEventsPaginated($cursor: String, $limit: Int!) {
 
 ```graphql
 subscription NewEvents {
-  your_table_name(
-    order_by: { timestamp: desc }
-    limit: 1
-  ) {
+  your_table_name(order_by: { timestamp: desc }, limit: 1) {
     id
     message
     timestamp
@@ -310,19 +322,19 @@ subscription NewEvents {
 // src/utils/errorHandling.ts
 export const handleIndexerError = (error: any) => {
   if (error.networkError) {
-    console.error('Network error:', error.networkError);
-    return 'Network connection failed. Please check your internet connection.';
+    console.error("Network error:", error.networkError);
+    return "Network connection failed. Please check your internet connection.";
   }
-  
+
   if (error.graphQLErrors?.length > 0) {
     const graphQLError = error.graphQLErrors[0];
-    if (graphQLError.message.includes('permission')) {
-      return 'Permission denied. Please check Hasura permissions configuration.';
+    if (graphQLError.message.includes("permission")) {
+      return "Permission denied. Please check Hasura permissions configuration.";
     }
     return `GraphQL error: ${graphQLError.message}`;
   }
-  
-  return 'An unexpected error occurred.';
+
+  return "An unexpected error occurred.";
 };
 ```
 
@@ -330,8 +342,8 @@ export const handleIndexerError = (error: any) => {
 
 ```tsx
 // src/hooks/useIndexedDataWithRetry.ts
-import { useState, useEffect } from 'react';
-import { apolloClient } from '../lib/graphql';
+import { useState, useEffect } from "react";
+import { apolloClient } from "../lib/graphql";
 
 export const useIndexedDataWithRetry = (query: any, variables: any) => {
   const [retryCount, setRetryCount] = useState(0);
@@ -339,15 +351,18 @@ export const useIndexedDataWithRetry = (query: any, variables: any) => {
 
   const { data, loading, error, refetch } = useQuery(query, {
     variables,
-    errorPolicy: 'all',
+    errorPolicy: "all",
     onError: (error) => {
       if (retryCount < maxRetries) {
-        setTimeout(() => {
-          setRetryCount(prev => prev + 1);
-          refetch();
-        }, 1000 * Math.pow(2, retryCount)); // Exponential backoff
+        setTimeout(
+          () => {
+            setRetryCount((prev) => prev + 1);
+            refetch();
+          },
+          1000 * Math.pow(2, retryCount),
+        ); // Exponential backoff
       }
-    }
+    },
   });
 
   return { data, loading, error, refetch, retryCount };
@@ -357,6 +372,7 @@ export const useIndexedDataWithRetry = (query: any, variables: any) => {
 ## Verification
 
 1. **Test the complete pipeline**:
+
    - Trigger an event from your smart contract
    - Check that data appears in Hasura console within seconds
    - Verify your frontend receives the new data

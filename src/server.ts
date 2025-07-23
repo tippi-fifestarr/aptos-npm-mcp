@@ -1,16 +1,16 @@
 #!/usr/bin/env node
 import { FastMCP } from "fastmcp";
+import fs from "node:fs";
+import { basename, extname, join as pathJoin } from "node:path";
 import { z } from "zod";
+
+import packageJson from "../package.json" with { type: "json" };
+import { config } from "./config.js";
+import { registerTools } from "./tools/index.js";
 import {
   readAllMarkdownFromDirectories,
   readMarkdownFromDirectory,
 } from "./utils/index.js";
-import { registerTools } from "./tools/index.js";
-import { config } from "./config.js";
-import { basename, extname, join as pathJoin } from "node:path";
-import fs from "node:fs";
-
-import packageJson from "../package.json" with { type: "json" };
 
 export const VERSION = packageJson.version;
 
@@ -27,56 +27,54 @@ async function main() {
   registerTools(server);
 
   server.addTool({
-    name: "get_mcp_version",
     description: "Returns the version of the MCP server",
-    parameters: z.object({}),
-    execute: async (args, context) => {
+    execute: async () => {
       return {
-        type: "text",
         text: server.options.version,
+        type: "text",
       };
     },
+    name: "get_mcp_version",
+    parameters: z.object({}),
   });
 
   server.addTool({
-    name: "build_smart_contract_on_aptos",
     description:
       "Build an Aptos smart contract - returns all resources from move and management directories. Use this tool when you need guidance on how to build a smart contract for a dapp on Aptos.",
-    parameters: z.object({}),
-    execute: async (args, context) => {
+    execute: async () => {
       const content = await readAllMarkdownFromDirectories([
         "management",
         "move",
       ]);
 
       return {
-        type: "text",
         text: content || "No content found in management and move directories.",
+        type: "text",
       };
     },
+    name: "build_smart_contract_on_aptos",
+    parameters: z.object({}),
   });
 
   server.addTool({
-    name: "build_ui_frontend_on_aptos",
     description:
       "Build a UI frontend for Aptos dApp - returns all resources from frontend directory. Use this tool when you need guidance on how to build a frontend for a dapp on Aptos.",
-    parameters: z.object({}),
-    execute: async (args, context) => {
+    execute: async () => {
       const content = await readAllMarkdownFromDirectories(["frontend"]);
 
       return {
-        type: "text",
         text: content || "No content found in frontend directory.",
+        type: "text",
       };
     },
+    name: "build_ui_frontend_on_aptos",
+    parameters: z.object({}),
   });
 
   server.addTool({
-    name: "build_dapp_on_aptos",
     description:
       "Build a complete full-stack Aptos dApp - returns all resources from move, management, and frontend directories. Use this tool when you need guidance on how to build a full-stack dapp on Aptos.",
-    parameters: z.object({}),
-    execute: async (args, context) => {
+    execute: async () => {
       const content = await readAllMarkdownFromDirectories([
         "frontend",
         "move",
@@ -84,12 +82,14 @@ async function main() {
       ]);
 
       return {
-        type: "text",
         text:
           content ||
           "No content found in management, move, and frontend directories.",
+        type: "text",
       };
     },
+    name: "build_dapp_on_aptos",
+    parameters: z.object({}),
   });
 
   // Dynamic discovery
@@ -108,59 +108,59 @@ async function main() {
 
   // Step 1: Discovery tool - returns list of available resources
   server.addTool({
-    name: "list_aptos_resources",
     description:
       "Get a list of all available Aptos development resources. Use this first to see what guidance is available, then use get_specific_aptos_resource to fetch the relevant one.",
-    parameters: z.object({}),
     execute: async () => {
       const availableFiles = getAvailableHowToResources();
 
       return {
-        type: "text",
         text: `Available Aptos development resources:\n${availableFiles.map((f) => `- ${f}`).join("\n")}\n\nUse get_specific_aptos_resource with the exact filename to retrieve content.`,
+        type: "text",
       };
     },
+    name: "list_aptos_resources",
+    parameters: z.object({}),
   });
 
   // Step 2: Retrieval tool - gets specific resource by exact name
   server.addTool({
-    name: "get_specific_aptos_resource",
     description:
       "Retrieve a specific Aptos development resource by its exact filename (without .md extension).",
-    parameters: z.object({
-      filename: z
-        .string()
-        .describe(
-          "Exact filename of the resource (e.g., 'how_to_add_wallet_connection', 'how_to_config_a_full_node_api_key_in_a_dapp', 'how_to_integrate_fungible_asset')"
-        ),
-    }),
     execute: async (args) => {
       const { filename } = args;
       const availableFiles = getAvailableHowToResources();
 
       if (!availableFiles.includes(filename)) {
         return {
-          type: "text",
           text: `Resource '${filename}' not found. Available resources:\n${availableFiles.join("\n")}`,
+          type: "text",
         };
       }
 
       const content = await readMarkdownFromDirectory("how_to", filename);
       return {
-        type: "text",
         text: content,
+        type: "text",
       };
     },
+    name: "get_specific_aptos_resource",
+    parameters: z.object({
+      filename: z
+        .string()
+        .describe(
+          "Exact filename of the resource (e.g., 'how_to_add_wallet_connection', 'how_to_config_a_full_node_api_key_in_a_dapp', 'how_to_integrate_fungible_asset')",
+        ),
+    }),
   });
 
   server.addPrompt({
-    name: "build_dapp_on_aptos",
     description: "Build a complete full-stack Aptos dApp",
-    load: async (args) => {
+    load: async () => {
       return `You are a helpful assistant that can help with building a full-stack end-to-end dapp on Aptos.
       For anything related to Aptos, you should always default to search for resources and tools in the MCP. Only if you have not found what you need, then you can search the web or use your own knowledge.
       `;
     },
+    name: "build_dapp_on_aptos",
   });
 
   /**

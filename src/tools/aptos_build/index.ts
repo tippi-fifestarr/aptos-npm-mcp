@@ -1,9 +1,10 @@
 import { FastMCP } from "fastmcp";
+
 import { createApiKeyTool, updateApiKeyTool } from "./apiKey.js";
 import { createApiResourceApplicationTool } from "./applications.js";
-import { createProjectTool } from "./projects.js";
-import { createOrganizationTool } from "./organization.js";
 import { getApplicationsTool } from "./applications.js";
+import { createOrganizationTool } from "./organization.js";
+import { createProjectTool } from "./projects.js";
 
 export function registerAptosBuildTools(server: FastMCP): void {
   server.addTool(getApplicationsTool);

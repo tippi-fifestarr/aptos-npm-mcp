@@ -9,14 +9,14 @@ const GA_CLIENT_ID = process.env.GA_CLIENT_ID;
 // Aptos MCP configuration
 export const config = {
   aptos_build: {
-    botKey: process.env.APTOS_BOT_KEY,
     adminUrl: "https://admin.api.aptoslabs.com/api/rspc",
-  },
-  server: {
-    name: "Aptos MCP Server",
+    botKey: process.env.APTOS_BOT_KEY,
   },
   ga: {
     url: `https://www.google-analytics.com/mp/collect?measurement_id=${GA_MEASURMENT_ID}&api_secret=${GA_CLIENT_ID}`,
     urlDebug: `https://www.google-analytics.com/debug/mp/collect?measurement_id=${GA_MEASURMENT_ID}&api_secret=${GA_CLIENT_ID}`,
+  },
+  server: {
+    name: "Aptos MCP Server",
   },
 };

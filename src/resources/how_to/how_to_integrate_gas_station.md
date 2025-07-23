@@ -1,6 +1,6 @@
 # How to Integrate Gas Station for Sponsored Transactions
 
-Gas Station lets your dApp pay gas fees for users, removing the "first, buy APT" hurdle and smoothing onboarding. Use it when you want newcomers to transact with empty wallets or need precise control over which functions are subsidized. 
+Gas Station lets your dApp pay gas fees for users, removing the "first, buy APT" hurdle and smoothing onboarding. Use it when you want newcomers to transact with empty wallets or need precise control over which functions are subsidized.
 
 ## Prerequisites
 
@@ -13,6 +13,7 @@ Make sure you have published your Move module to Testnet or Mainnet and have the
 2. Choose "Gas Station" as the project type.
 
 3. Configure your Gas Station:
+
    - Name the project (3-32 chars, lowercase, numbers, `_` or `-`)
    - Select network (Mainnet or Testnet)
    - Paste your module address and select module name
@@ -39,11 +40,10 @@ npm install @aptos-labs/ts-sdk@latest @aptos-labs/gas-station-client@latest @apt
 // src/lib/gasStation.ts
 import { AptosConfig, Aptos, Network } from "@aptos-labs/ts-sdk";
 import { createGasStationClient } from "@aptos-labs/gas-station-client";
-// use process.env or set up variables 
+// use process.env or set up variables
 
-const network = PUBLIC_NETWORK === 'mainnet'
-  ? Network.MAINNET
-  : Network.TESTNET;
+const network =
+  PUBLIC_NETWORK === "mainnet" ? Network.MAINNET : Network.TESTNET;
 
 // Create Gas Station client
 const gasStationClient = createGasStationClient({
@@ -213,7 +213,7 @@ export const submitSponsoredTransactionManually = async (
   userAddress: string,
   functionName: string,
   functionArguments: any[],
-  signTransaction: any
+  signTransaction: any,
 ) => {
   // Build a sponsored transaction
   const tx = await aptos.transaction.build.simple({
@@ -253,22 +253,22 @@ export const submitSponsoredTransactionManually = async (
 ```tsx
 // src/utils/gasStationErrors.ts
 export const handleGasStationError = (error: any) => {
-  if (error.message?.includes('insufficient funds')) {
-    return 'Gas Station has insufficient funds. Please contact support.';
+  if (error.message?.includes("insufficient funds")) {
+    return "Gas Station has insufficient funds. Please contact support.";
   }
-  
-  if (error.message?.includes('function not allowed')) {
-    return 'This function is not sponsored by the Gas Station.';
+
+  if (error.message?.includes("function not allowed")) {
+    return "This function is not sponsored by the Gas Station.";
   }
-  
-  if (error.message?.includes('rate limit')) {
-    return 'Rate limit exceeded. Please try again later.';
+
+  if (error.message?.includes("rate limit")) {
+    return "Rate limit exceeded. Please try again later.";
   }
-  
-  if (error.message?.includes('reCAPTCHA')) {
-    return 'reCAPTCHA verification failed. Please try again.';
+
+  if (error.message?.includes("reCAPTCHA")) {
+    return "reCAPTCHA verification failed. Please try again.";
   }
-  
+
   return `Transaction failed: ${error.message}`;
 };
 ```
@@ -276,10 +276,12 @@ export const handleGasStationError = (error: any) => {
 ## Verification
 
 1. **Test sponsored transactions**:
+
    - Users should see "Network Fee: 0 APT" in their wallet confirmation
    - Transactions should complete without users holding APT tokens
 
 2. **Monitor usage**:
+
    - Check Aptos Build dashboard → Gas Station → Usage
    - Track gas costs in USD and transaction volume
    - Set up alerts for high usage or errors

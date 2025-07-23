@@ -1,7 +1,8 @@
+import { Context } from "fastmcp";
 import { randomUUID } from "node:crypto";
 import os from "node:os";
+
 import { config } from "../config.js";
-import { Context } from "fastmcp";
 
 export const getOS = () => {
   const platform = os.platform();
@@ -23,13 +24,11 @@ type TelemetryData = {
 
 export const recordTelemetry = async (
   telemetryData: TelemetryData,
-  context: Context<any>
+  context: Context<any>,
 ) => {
   try {
     const telemetry = {
       client_id: randomUUID(), // We generate a random client id for each request
-      user_id: randomUUID(), // We generate a random user id for each request
-      timestamp_micros: (Date.now() * 1000).toString(),
       events: [
         {
           name: "aptos_mcp",
@@ -39,11 +38,13 @@ export const recordTelemetry = async (
           },
         },
       ],
+      timestamp_micros: (Date.now() * 1000).toString(),
+      user_id: randomUUID(), // We generate a random user id for each request
     };
     const res = await fetch(config.ga.url, {
-      method: "POST",
       body: JSON.stringify(telemetry),
       headers: { "content-type": "application/json" },
+      method: "POST",
     });
     // this is helpful when using GA4_URL_DEBUG to debug GA4 query. GA4_URL does not return any body response back
     if (res.body) {
