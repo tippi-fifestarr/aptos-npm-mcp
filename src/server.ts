@@ -4,15 +4,12 @@ import fs from "node:fs";
 import { basename, extname, join as pathJoin } from "node:path";
 import { z } from "zod";
 
-import packageJson from "../package.json" with { type: "json" };
 import { config } from "./config.js";
 import { registerTools } from "./tools/index.js";
 import {
   readAllMarkdownFromDirectories,
   readMarkdownFromDirectory,
 } from "./utils/index.js";
-
-export const VERSION = packageJson.version;
 
 async function main() {
   /**
@@ -21,7 +18,7 @@ async function main() {
 
   const server = new FastMCP({
     name: config.server.name,
-    version: VERSION as `${number}.${number}.${number}`,
+    version: "0.0.13",
   });
 
   registerTools(server);
@@ -148,7 +145,7 @@ async function main() {
       filename: z
         .string()
         .describe(
-          "Exact filename of the resource (e.g., 'how_to_add_wallet_connection', 'how_to_config_a_full_node_api_key_in_a_dapp', 'how_to_integrate_fungible_asset')",
+          "Exact filename of the resource (e.g., 'how_to_add_wallet_connection', 'how_to_config_a_full_node_api_key_in_a_dapp', 'how_to_integrate_fungible_asset')"
         ),
     }),
   });
