@@ -31,6 +31,8 @@ rev = "mainnet"
 subdir = "aptos-framework"
 ```
 
+**IMPORTANT:** Always use "_" as the address in the [addresses] section. Only use actual addresses in the [dev-addresses] section. This allows proper address resolution during compilation and deployment.
+
 3. Write your Move smart contract modules
 
 ### Compiling
