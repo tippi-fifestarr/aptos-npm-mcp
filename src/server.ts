@@ -248,7 +248,7 @@ REQUIRED FIRST STEPS:
 
 3. Common Aptos-specific resources to check:
    - 'how_to_add_wallet_connection' - for wallet issues
-   - 'how_to_sign_and_submit_transaction' - for transaction problems
+   - 'how_to_sign_and_submit_transaction' - for transaction execution problems with a wallet
    - 'how_to_config_a_full_node_api_key_in_a_dapp' - for API setup
    - 'how_to_handle_rate_limit_in_a_dapp' - for rate limiting
    - 'how_to_integrate_gas_station' - for gas station integration
