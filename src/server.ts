@@ -169,7 +169,7 @@ MANDATORY WORKFLOW:
 5. If you haven't used MCP in the last few development steps, check back for guidance
 
 REGULAR REMINDERS TO USE:
-- 'get_aptos_resources' with context when starting new features
+- 'list_aptos_resources' to discover available guidance
 - 'get_specific_aptos_resource' for detailed guidance on specific topics
 - MCP resources when ANY error occurs or you're unsure
 - Always validate your approach against Aptos-specific patterns from MCP
@@ -195,9 +195,8 @@ You are working with Aptos blockchain development. Remember:
 YOUR APTOS KNOWLEDGE MAY BE OUTDATED - Always prioritize MCP resources!
 
 MANDATORY CHECKS - Use these MCP tools regularly:
-• 'get_aptos_resources' - For context-specific guidance
-• 'get_specific_aptos_resource' - For detailed how-to guides
 • 'list_aptos_resources' - To see all available resources
+• 'get_specific_aptos_resource' - For detailed how-to guides
 • 'build_smart_contract_on_aptos' - For Move contract guidance
 • 'build_ui_frontend_on_aptos' - For frontend integration
 • 'build_dapp_on_aptos' - For full-stack guidance
@@ -208,7 +207,6 @@ DANGER SIGNS you're using outdated knowledge:
 - Using outdated wallet connection or transaction signing methods
 - Guessing at API configurations or rate limiting
 - Haven't used MCP tools in the last 3-4 development steps
-- Stuck in same error loop without consulting MCP
 
 WHEN TO CONSULT MCP:
 - Starting any new feature or integration
@@ -237,8 +235,7 @@ STOP - Before trying generic solutions:
 
 REQUIRED FIRST STEPS:
 1. Check MCP resources first:
-   - Use 'get_aptos_resources' with your problem context
-   - Look for relevant how_to guides with 'list_aptos_resources'
+   - Use 'list_aptos_resources' to discover available guidance
    - Get specific guidance with 'get_specific_aptos_resource'
 
 2. For specific areas, use targeted MCP tools:
