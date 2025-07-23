@@ -7,6 +7,9 @@ import {
   UpdateApiKeyToolScheme,
 } from "../types/organization.js";
 
+/**
+ * Tool to create an API Key for your Aptos Build Organization.
+ */
 export const createApiKeyTool: Tool<undefined, typeof CreateApiKeyToolScheme> =
   {
     description: `Create a new API Key for your Aptos Build Organization. Api Keys are secret keys so it is important to keep them safe and secure. 
@@ -31,6 +34,9 @@ export const createApiKeyTool: Tool<undefined, typeof CreateApiKeyToolScheme> =
     parameters: CreateApiKeyToolScheme,
   };
 
+/**
+ * Tool to update an API Key for your Aptos Build Organization.
+ */
 export const updateApiKeyTool: Tool<undefined, typeof UpdateApiKeyToolScheme> =
   {
     description: "Update an API Key for your Aptos Build Organization.",
@@ -39,7 +45,7 @@ export const updateApiKeyTool: Tool<undefined, typeof UpdateApiKeyToolScheme> =
         await recordTelemetry({ action: "update_api_key" }, context);
         const aptosBuild = new AptosBuild();
         context.log.info(
-          `Updating api key: ${JSON.stringify(args.frontend_args)}`,
+          `Updating api key: ${JSON.stringify(args.frontend_args)}`
         );
         const apiKey = await aptosBuild.updateApiKey({
           application_id: args.application_id,
