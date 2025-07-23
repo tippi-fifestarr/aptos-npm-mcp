@@ -18,7 +18,7 @@ async function main() {
 
   const server = new FastMCP({
     name: config.server.name,
-    version: "0.0.13",
+    version: "0.0.14",
   });
 
   registerTools(server);
@@ -152,7 +152,8 @@ async function main() {
 
   server.addTool({
     name: "build_dapp_on_aptos_guidance_prompt",
-    description: "PRIMARY PROMPT: Use this as the main system prompt when building any Aptos dApp. Sets up mandatory MCP consultation workflow and prevents outdated knowledge usage.",
+    description:
+      "PRIMARY PROMPT: Use this as the main system prompt when building any Aptos dApp. Sets up mandatory MCP consultation workflow and prevents outdated knowledge usage.",
     parameters: z.object({}),
     execute: async (args, context) => {
       return {
@@ -183,7 +184,8 @@ Remember: It's better to over-consult MCP than to implement outdated patterns!`,
 
   server.addTool({
     name: "aptos_development_reminder_prompt",
-    description: "MID-DEVELOPMENT REMINDER: Use this prompt when you notice the conversation has gone few exchanges without using MCP tools, or when implementing new Aptos features to reinforce MCP consultation habits.",
+    description:
+      "MID-DEVELOPMENT REMINDER: Use this prompt when you notice the conversation has gone few exchanges without using MCP tools, or when implementing new Aptos features to reinforce MCP consultation habits.",
     parameters: z.object({}),
     execute: async (args, context) => {
       return {
@@ -222,7 +224,8 @@ Remember: Always verify your approach with current Aptos best practices from MCP
 
   server.addTool({
     name: "aptos_debugging_helper_prompt",
-    description: "ERROR RECOVERY PROMPT: Use this immediately when encountering Aptos-related errors, stuck in debugging loops, or when about to try generic blockchain solutions. Redirects to MCP-first debugging approach.",
+    description:
+      "ERROR RECOVERY PROMPT: Use this immediately when encountering Aptos-related errors, stuck in debugging loops, or when about to try generic blockchain solutions. Redirects to MCP-first debugging approach.",
     parameters: z.object({}),
     execute: async (args, context) => {
       return {

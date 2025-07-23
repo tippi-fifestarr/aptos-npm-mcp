@@ -1,6 +1,6 @@
 {
   "name": "@aptos-labs/aptos-mcp",
-  "version": "0.0.13",
+  "version": "0.0.14",
   "main": "dist/server.js",
   "module": "dist/server.js",
   "bin": {
