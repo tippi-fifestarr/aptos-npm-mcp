@@ -34,6 +34,7 @@ The following doc outlines the best practices and guidelines to follow when writ
   - For any Coin or AptosCoin related implementation, use the `Aptos Fungible Asset (FA) Standard`
   - For any NFT related implementation, use the `Aptos Digital Asset (DA) Standard`
   - For any data that should be easily modified or that requires other users to use the data, use the Aptos `Object`
+  - When working with objects: ALWAYS complete all `move_to` operations to the object BEFORE calling any get operations on that object
 
 ### Unit tests
 
