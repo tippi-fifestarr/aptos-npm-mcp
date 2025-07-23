@@ -8,6 +8,9 @@ import {
   getApplicationsToolScheme,
 } from "../types/organization.js";
 
+/**
+ * Tool to get all applications for your Aptos Build Organization.
+ */
 export const getApplicationsTool: Tool<
   undefined,
   typeof getApplicationsToolScheme
@@ -29,6 +32,9 @@ export const getApplicationsTool: Tool<
   parameters: z.object({}),
 };
 
+/**
+ * Tool to create a new Full Node API Resource application for your Aptos Build Organization.
+ */
 export const createApiResourceApplicationTool: Tool<
   undefined,
   typeof CreateApiResourceApplicationToolScheme
@@ -39,7 +45,7 @@ export const createApiResourceApplicationTool: Tool<
     try {
       await recordTelemetry(
         { action: "create_api_resource_application" },
-        context,
+        context
       );
       const aptosBuild = new AptosBuild();
       const application = await aptosBuild.createApplication({

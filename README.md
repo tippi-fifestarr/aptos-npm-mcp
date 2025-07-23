@@ -56,6 +56,41 @@ npm run dev
 
 This will start the server and allow you to interact with it using CLI.
 
+### Link local MCP server to your project
+
+#### Cursor
+
+```json
+{
+  "mcpServers": {
+    "aptos-mcp": {
+      "command": "npx",
+      "args": ["tsx", "<path-to-mcp-server>/src/server.ts"],
+      "env": {
+        "APTOS_BOT_KEY": "<bot_api_key>"
+      }
+    }
+  }
+}
+```
+
+#### Claude Code
+
+```json
+{
+  "mcpServers": {
+    "aptos-mcp": {
+      "command": "npx",
+      "args": ["tsx", "<path-to-mcp-server>/src/server.ts"],
+      "type": "stdio",
+      "env": {
+        "APTOS_BOT_KEY": "<bot_api_key>"
+      }
+    }
+  }
+}
+```
+
 ### Debugging
 
 You can test and debug the MCP using the [MCP Inspector](https://github.com/modelcontextprotocol/inspector) tool.

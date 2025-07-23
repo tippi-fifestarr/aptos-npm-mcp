@@ -4,6 +4,9 @@ import { AptosBuild } from "../../services/AptosBuild.js";
 import { recordTelemetry } from "../../utils/telemetry.js";
 import { CreateOrganizationToolScheme } from "../types/organization.js";
 
+/**
+ * Tool to create a new Organization for your Aptos Build.
+ */
 export const createOrganizationTool: Tool<
   undefined,
   typeof CreateOrganizationToolScheme
