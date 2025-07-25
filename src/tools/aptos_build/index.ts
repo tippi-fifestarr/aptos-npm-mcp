@@ -1,16 +1,41 @@
 import { FastMCP } from "fastmcp";
 
-import { createApiKeyTool, updateApiKeyTool } from "./apiKey.js";
-import { createApiResourceApplicationTool } from "./applications.js";
+import {
+  createApiKeyTool,
+  deleteApiKeyTool,
+  updateApiKeyTool,
+} from "./apiKey.js";
+import {
+  createApiResourceApplicationTool,
+  deleteApplicationTool,
+  updateApplicationNameTool,
+} from "./applications.js";
 import { getApplicationsTool } from "./applications.js";
-import { createOrganizationTool } from "./organization.js";
-import { createProjectTool } from "./projects.js";
+import {
+  createOrganizationTool,
+  updateOrganizationTool,
+} from "./organization.js";
+import {
+  createProjectTool,
+  deleteProjectTool,
+  updateProjectTool,
+} from "./projects.js";
 
 export function registerAptosBuildTools(server: FastMCP): void {
+  // get all user's organizations + projects + applications + api keys
   server.addTool(getApplicationsTool);
+  // Create tools
   server.addTool(createOrganizationTool);
-  server.addTool(createApiResourceApplicationTool);
   server.addTool(createProjectTool);
+  server.addTool(createApiResourceApplicationTool);
   server.addTool(createApiKeyTool);
+  // Update tools
+  server.addTool(updateOrganizationTool);
+  server.addTool(updateProjectTool);
+  server.addTool(updateApplicationNameTool);
   server.addTool(updateApiKeyTool);
+  // Delete tools
+  server.addTool(deleteApplicationTool);
+  server.addTool(deleteProjectTool);
+  server.addTool(deleteApiKeyTool);
 }
