@@ -28,7 +28,7 @@ export const createApiKeyTool: Tool<undefined, typeof CreateApiKeyToolScheme> =
         });
         return JSON.stringify(apiKey);
       } catch (error) {
-        return `❌ Failed to create api key: ${(error as Error).message}`;
+        return `❌ Failed to create api key: ${error}`;
       }
     },
     name: "create_aptos_build_api_key",
@@ -58,7 +58,7 @@ export const updateApiKeyTool: Tool<undefined, typeof UpdateApiKeyToolScheme> =
         });
         return JSON.stringify(apiKey);
       } catch (error) {
-        return `❌ Failed to update api key: ${(error as Error).message}`;
+        return `❌ Failed to update api key: ${error}`;
       }
     },
     name: "update_aptos_build_api_key",
@@ -83,7 +83,7 @@ export const deleteApiKeyTool: Tool<undefined, typeof DeleteApiKeyToolScheme> =
         });
         return JSON.stringify(apiKey);
       } catch (error) {
-        return `❌ Failed to delete api key: ${(error as Error).message}`;
+        return `❌ Failed to delete api key: ${error}`;
       }
     },
     name: "delete_aptos_build_api_key",

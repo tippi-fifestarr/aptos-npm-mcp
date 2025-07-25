@@ -24,7 +24,7 @@ export const createOrganizationTool: Tool<
       });
       return JSON.stringify(organization);
     } catch (error) {
-      return `❌ Failed to create organization: ${(error as Error).message}`;
+      return `❌ Failed to create organization: ${error}`;
     }
   },
   name: "create_aptos_build_organization",
@@ -49,7 +49,7 @@ export const updateOrganizationTool: Tool<
       });
       return JSON.stringify(organization);
     } catch (error) {
-      return `❌ Failed to update organization: ${(error as Error).message}`;
+      return `❌ Failed to update organization: ${error}`;
     }
   },
   name: "update_aptos_build_organization",
