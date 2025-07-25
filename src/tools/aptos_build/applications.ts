@@ -27,7 +27,7 @@ export const getApplicationsTool: Tool<
       const organizations = await aptosBuild.getApplications();
       return JSON.stringify(organizations);
     } catch (error) {
-      return `❌ Failed to get organizations: ${(error as Error).message}`;
+      return `❌ Failed to get organizations: ${error}`;
     }
   },
   name: "get_aptos_build_applications",
@@ -62,7 +62,7 @@ export const createApiResourceApplicationTool: Tool<
       });
       return JSON.stringify(application);
     } catch (error) {
-      return `❌ Failed to create application: ${(error as Error).message}`;
+      return `❌ Failed to create application: ${error}`;
     }
   },
   name: "create_aptos_build_api_resource_application",
@@ -88,7 +88,7 @@ export const deleteApplicationTool: Tool<
       });
       return JSON.stringify(application);
     } catch (error) {
-      return `❌ Failed to delete application: ${(error as Error).message}`;
+      return `❌ Failed to delete application: ${error}`;
     }
   },
   name: "delete_aptos_application",

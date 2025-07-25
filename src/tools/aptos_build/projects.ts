@@ -27,7 +27,7 @@ export const createProjectTool: Tool<
       });
       return JSON.stringify(project);
     } catch (error) {
-      return `❌ Failed to create project: ${(error as Error).message}`;
+      return `❌ Failed to create project: ${error}`;
     }
   },
   name: "create_aptos_build_project",
@@ -54,7 +54,7 @@ export const updateProjectTool: Tool<
       });
       return JSON.stringify(project);
     } catch (error) {
-      return `❌ Failed to update project: ${(error as Error).message}`;
+      return `❌ Failed to update project: ${error}`;
     }
   },
   name: "update_aptos_build_project",
@@ -79,7 +79,7 @@ export const deleteProjectTool: Tool<
       });
       return JSON.stringify(response);
     } catch (error) {
-      return `❌ Failed to delete project: ${(error as Error).message}`;
+      return `❌ Failed to delete project: ${error}`;
     }
   },
   name: "delete_aptos_build_project",

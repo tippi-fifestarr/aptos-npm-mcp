@@ -68,7 +68,7 @@ export class AptosBuild {
       ]);
       return apiKey;
     } catch (error) {
-      throw new Error(`Failed to create api key: ${String(error)}`);
+      throw new Error(`Failed to create api key: ${JSON.stringify(error)}`);
     }
   }
 
@@ -97,7 +97,7 @@ export class AptosBuild {
       ]);
       return application;
     } catch (error) {
-      throw new Error(`Failed to create application: ${String(error)}`);
+      throw new Error(`Failed to create application: ${JSON.stringify(error)}`);
     }
   }
 
@@ -114,7 +114,9 @@ export class AptosBuild {
       ]);
       return organization;
     } catch (error) {
-      throw new Error(`Failed to create organization: ${String(error)}`);
+      throw new Error(
+        `Failed to create organization: ${JSON.stringify(error)}`
+      );
     }
   }
 
@@ -144,7 +146,7 @@ export class AptosBuild {
       ]);
       return project;
     } catch (error) {
-      throw new Error(`Failed to create project: ${String(error)}`);
+      throw new Error(`Failed to create project: ${JSON.stringify(error)}`);
     }
   }
 
@@ -160,7 +162,7 @@ export class AptosBuild {
       ]);
       return organizations;
     } catch (error) {
-      throw new Error(`Failed to get organizations: ${String(error)}`);
+      throw new Error(`Failed to get organizations: ${JSON.stringify(error)}`);
     }
   }
 
@@ -195,7 +197,7 @@ export class AptosBuild {
       ]);
       return apiKey;
     } catch (error) {
-      throw new Error(`Failed to update api key: ${String(error)}`);
+      throw new Error(`Failed to update api key: ${JSON.stringify(error)}`);
     }
   }
 
@@ -224,7 +226,7 @@ export class AptosBuild {
       ]);
       return apiKey;
     } catch (error) {
-      throw new Error(`Failed to delete api key: ${String(error)}`);
+      throw new Error(`Failed to delete api key: ${JSON.stringify(error)}`);
     }
   }
 
@@ -251,7 +253,7 @@ export class AptosBuild {
       ]);
       return application;
     } catch (error) {
-      throw new Error(`Failed to delete application: ${String(error)}`);
+      throw new Error(`Failed to delete application: ${JSON.stringify(error)}`);
     }
   }
 
@@ -283,7 +285,7 @@ export class AptosBuild {
       this.context.log.error(
         `Failed to update project: ${JSON.stringify(error)}`
       );
-      throw new Error(`Failed to update project: ${String(error)}`);
+      throw new Error(`Failed to update project: ${JSON.stringify(error)}`);
     }
   }
 
@@ -306,7 +308,9 @@ export class AptosBuild {
       ]);
       return organization;
     } catch (error) {
-      throw new Error(`Failed to update organization: ${String(error)}`);
+      throw new Error(
+        `Failed to update organization: ${JSON.stringify(error)}`
+      );
     }
   }
 
@@ -330,7 +334,7 @@ export class AptosBuild {
       ]);
       return "Project deleted successfully";
     } catch (error) {
-      throw new Error(`Failed to delete project: ${String(error)}`);
+      throw new Error(`Failed to delete project: ${JSON.stringify(error)}`);
     }
   }
 
