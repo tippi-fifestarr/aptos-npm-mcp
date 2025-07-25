@@ -10,12 +10,14 @@ import {
 } from "@aptos-labs/api-gateway-admin-api-client";
 
 import { config } from "../config.js";
+import { Context } from "fastmcp";
 
 export class AptosBuild {
   protected readonly headers: Record<string, string>;
   private readonly adminUrl: string;
+  private readonly context: Context<any>;
 
-  constructor() {
+  constructor(context: Context<any>) {
     if (!config.aptos_build.botKey) {
       throw new Error(
         `APTOS_BOT_KEY is not set. To generate a Bot Key: 
@@ -23,7 +25,7 @@ export class AptosBuild {
         2. Click on your name in the bottom left corner
         3. Click on "Bot Keys"
         4. Click on the "Create Bot Key" button
-        5. Copy the Bot Key and paste it into the MCP configuration file as an env arg: APTOS_BOT_KEY=<your-bot-key>`,
+        5. Copy the Bot Key and paste it into the MCP configuration file as an env arg: APTOS_BOT_KEY=<your-bot-key>`
       );
     }
     this.adminUrl = config.aptos_build.adminUrl;
@@ -31,6 +33,7 @@ export class AptosBuild {
       Authorization: `Bearer ${config.aptos_build.botKey}`,
       "x-is-aptos-bot": "true",
     };
+    this.context = context;
   }
 
   /**
@@ -196,6 +199,172 @@ export class AptosBuild {
     }
   }
 
+  async deleteApiKey({
+    application_id,
+    api_key_name,
+    organization_id,
+    project_id,
+  }: {
+    application_id: string;
+    api_key_name: string;
+    organization_id: string;
+    project_id: string;
+  }): Promise<ApiKey> {
+    try {
+      const adminApiClient = this.createApiClient({
+        "x-jwt-application-id": application_id,
+        "x-jwt-organization-id": organization_id,
+        "x-jwt-project-id": project_id,
+      });
+      const apiKey = await adminApiClient.mutation([
+        "deleteApiKeyV2",
+        {
+          name: api_key_name,
+        },
+      ]);
+      return apiKey;
+    } catch (error) {
+      throw new Error(`Failed to delete api key: ${String(error)}`);
+    }
+  }
+
+  async deleteApplication({
+    organization_id,
+    project_id,
+    application_id,
+  }: {
+    organization_id: string;
+    project_id: string;
+    application_id: string;
+  }): Promise<Application> {
+    try {
+      const adminApiClient = this.createApiClient({
+        "x-jwt-organization-id": organization_id,
+        "x-jwt-project-id": project_id,
+        "x-jwt-application-id": application_id,
+      });
+      const application = await adminApiClient.mutation([
+        "deleteApplicationV2",
+        {
+          _dummy: "",
+        },
+      ]);
+      return application;
+    } catch (error) {
+      throw new Error(`Failed to delete application: ${String(error)}`);
+    }
+  }
+
+  async updateProject({
+    description,
+    organization_id,
+    project_id,
+    project_name,
+  }: {
+    description: string;
+    organization_id: string;
+    project_id: string;
+    project_name: string;
+  }): Promise<Project> {
+    try {
+      const adminApiClient = this.createApiClient({
+        "x-jwt-organization-id": organization_id,
+        "x-jwt-project-id": project_id,
+      });
+      const project = await adminApiClient.mutation([
+        "updateProject",
+        {
+          description,
+          project_name,
+        },
+      ]);
+      return project;
+    } catch (error) {
+      this.context.log.error(
+        `Failed to update project: ${JSON.stringify(error)}`
+      );
+      throw new Error(`Failed to update project: ${String(error)}`);
+    }
+  }
+
+  async updateOrganization({
+    name,
+    organization_id,
+  }: {
+    name: string;
+    organization_id: string;
+  }): Promise<Organization> {
+    try {
+      const adminApiClient = this.createApiClient({
+        "x-jwt-organization-id": organization_id,
+      });
+      const organization = await adminApiClient.mutation([
+        "updateOrganization",
+        {
+          name,
+        },
+      ]);
+      return organization;
+    } catch (error) {
+      throw new Error(`Failed to update organization: ${String(error)}`);
+    }
+  }
+
+  async deleteProject({
+    organization_id,
+    project_id,
+  }: {
+    organization_id: string;
+    project_id: string;
+  }): Promise<string> {
+    try {
+      const adminApiClient = this.createApiClient({
+        "x-jwt-organization-id": organization_id,
+        "x-jwt-project-id": project_id,
+      });
+      await adminApiClient.mutation([
+        "deleteProject",
+        {
+          _dummy: "",
+        },
+      ]);
+      return "Project deleted successfully";
+    } catch (error) {
+      throw new Error(`Failed to delete project: ${String(error)}`);
+    }
+  }
+
+  async updateApplicationName({
+    organization_id,
+    application_id,
+    project_id,
+    new_application_name,
+  }: {
+    organization_id: string;
+    application_id: string;
+    project_id: string;
+    new_application_name: string;
+  }): Promise<string> {
+    try {
+      const adminApiClient = this.createApiClient({
+        "x-jwt-organization-id": organization_id,
+        "x-jwt-project-id": project_id,
+        "x-jwt-application-id": application_id,
+      });
+      await adminApiClient.mutation([
+        "setApplicationNameV2",
+        {
+          new_application_name: new_application_name,
+        },
+      ]);
+      return "Application name updated successfully";
+    } catch (error) {
+      throw new Error(
+        `Failed to update application name: ${JSON.stringify(error)}`
+      );
+    }
+  }
+
   protected createApiClient(additionalHeaders: Record<string, string> = {}) {
     return createAdminApiClient({
       apiUrl: this.adminUrl,
@@ -204,11 +373,11 @@ export class AptosBuild {
   }
 
   private createCustomFetch = (
-    additionalHeaders: Record<string, string> = {},
+    additionalHeaders: Record<string, string> = {}
   ) => {
     return async (
       input: Request | string | URL,
-      init?: RequestInit,
+      init?: RequestInit
     ): Promise<Response> => {
       const headers = new Headers(init?.headers);
 
