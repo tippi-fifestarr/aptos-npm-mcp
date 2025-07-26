@@ -66,7 +66,7 @@ query {
 1. **Set up environment variables**:
 
 ```env
-INDEXER_API_KEY=aptoslabs_YOUR_API_KEY_HERE
+NO_CODE_INDEXER_API_KEY=aptoslabs_YOUR_API_KEY_HERE
 INDEXER_API_URL=https://api.testnet.aptoslabs.com/nocode/v1/api/YOUR_PROCESSOR_ID/v1/graphql
 NETWORK=testnet
 ```
@@ -93,7 +93,7 @@ class IndexerClient {
 
   constructor() {
     this.apiUrl = INDEXER_API_URL || '';
-    this.apiKey = INDEXER_API_KEY || '';
+    this.apiKey = NO_CODE_INDEXER_API_KEY || '';
   }
 
   private async executeQuery(query: string, variables: Record<string, unknown> = {}): Promise<any> {
@@ -250,7 +250,7 @@ export const MessagesList = () => {
 
 ```bash
 curl -X POST https://api.testnet.aptoslabs.com/nocode/v1/api/YOUR_PROCESSOR_ID/v1/graphql \
-  -H "Authorization: Bearer YOUR_API_KEY" \
+  -H "Authorization: Bearer NO_CODE_INDEXER_API_KEY" \
   -H "Content-Type: application/json" \
   -d '{"query": "query { your_table_name { author_address time message } }"}'
 ```
