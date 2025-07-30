@@ -282,9 +282,6 @@ export class AptosBuild {
       ]);
       return project;
     } catch (error) {
-      this.context.log.error(
-        `Failed to update project: ${JSON.stringify(error)}`
-      );
       throw new Error(`Failed to update project: ${JSON.stringify(error)}`);
     }
   }
