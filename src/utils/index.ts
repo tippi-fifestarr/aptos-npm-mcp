@@ -1,6 +1,6 @@
 import * as fs from "fs";
 import { readFile } from "fs/promises";
-import { dirname, extname, join as pathJoin } from "path";
+import { basename, dirname, extname, join as pathJoin } from "path";
 import { fileURLToPath } from "url";
 
 // Get __dirname equivalent in ES modules
@@ -9,11 +9,25 @@ const __dirname = dirname(__filename);
 
 const resourcesDir = pathJoin(__dirname, "..", "resources");
 
+// Dynamic discovery
+export const getAvailableHowToResources = () => {
+  try {
+    const howToDir = pathJoin(resourcesDir, "how_to");
+    const files = fs.readdirSync(howToDir);
+    return files
+      .filter((file) => extname(file).toLowerCase() === ".md")
+      .map((file) => basename(file, extname(file)));
+  } catch (err) {
+    console.error(`Error reading how_to directory: ${err}`);
+    return [];
+  }
+};
+
 /**
  * Helper function to read all markdown files from multiple directories
  */
 export async function readAllMarkdownFromDirectories(
-  dirNames: string[],
+  dirNames: string[]
 ): Promise<string> {
   let combinedContent = "";
 
@@ -33,7 +47,7 @@ export async function readAllMarkdownFromDirectories(
  * Helper function to read all markdown files from a directory
  */
 export async function readAllMarkdownFromDirectory(
-  dirPath: string,
+  dirPath: string
 ): Promise<string> {
   let content = "";
 
@@ -44,7 +58,7 @@ export async function readAllMarkdownFromDirectory(
 
     const files = fs.readdirSync(dirPath);
     const markdownFiles = files.filter(
-      (file: string) => extname(file).toLowerCase() === ".md",
+      (file: string) => extname(file).toLowerCase() === ".md"
     );
 
     for (const file of markdownFiles) {
@@ -70,7 +84,7 @@ export async function readAllMarkdownFromDirectory(
  */
 export async function readMarkdownFromDirectory(
   dirName: string,
-  fileName: string,
+  fileName: string
 ): Promise<string> {
   try {
     const dirPath = pathJoin(resourcesDir, dirName);
