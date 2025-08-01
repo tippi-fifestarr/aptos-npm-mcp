@@ -106,9 +106,9 @@ export class GasStation {
               },
               // TODO: support costum user values
               config: {
-                gasUnitPriceMax: "100",
+                gasUnitPriceMax: "350",
                 gasUnitPriceMin: "100",
-                maxGasAmountMax: "50",
+                maxGasAmountMax: "250_000",
                 maxGasAmountMin: "3",
                 skipSimulation: false,
                 txExpiryDurationSecs: 120,
