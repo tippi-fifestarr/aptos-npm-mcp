@@ -70,9 +70,7 @@ const config = new AptosConfig({
 });
 ```
 
-3. ✅ Ensure the selected API key is injected into the:
-
-- AptosWalletAdapterProvider:
+3. ✅ Ensure the transaction submitter is injected into the `AptosWalletAdapterProvider`:
 
 ```ts
 import { aptosClient } from "../utils/aptosClient"; // this has our network definition
