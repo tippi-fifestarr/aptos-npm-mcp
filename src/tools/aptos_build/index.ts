@@ -7,6 +7,7 @@ import {
 } from "./apiKey.js";
 import {
   createApiResourceApplicationTool,
+  createGasStationApplicationTool,
   deleteApplicationTool,
   updateApplicationNameTool,
 } from "./applications.js";
@@ -28,6 +29,7 @@ export function registerAptosBuildTools(server: FastMCP): void {
   server.addTool(createOrganizationTool);
   server.addTool(createProjectTool);
   server.addTool(createApiResourceApplicationTool);
+  server.addTool(createGasStationApplicationTool);
   server.addTool(createApiKeyTool);
   // Update tools
   server.addTool(updateOrganizationTool);

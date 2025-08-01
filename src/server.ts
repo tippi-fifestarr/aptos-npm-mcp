@@ -1,12 +1,11 @@
 #!/usr/bin/env node
 import { FastMCP } from "fastmcp";
-import fs from "node:fs";
-import { basename, extname, join as pathJoin } from "node:path";
 import { z } from "zod";
 
 import { config } from "./config.js";
 import { registerTools } from "./tools/index.js";
 import {
+  getAvailableHowToResources,
   readAllMarkdownFromDirectories,
   readMarkdownFromDirectory,
 } from "./utils/index.js";
@@ -88,20 +87,6 @@ async function main() {
     name: "build_dapp_on_aptos",
     parameters: z.object({}),
   });
-
-  // Dynamic discovery
-  const getAvailableHowToResources = () => {
-    try {
-      const howToDir = pathJoin(process.cwd(), "src/resources/how_to");
-      const files = fs.readdirSync(howToDir);
-      return files
-        .filter((file) => extname(file).toLowerCase() === ".md")
-        .map((file) => basename(file, extname(file)));
-    } catch (err) {
-      console.error(`Error reading how_to directory: ${err}`);
-      return [];
-    }
-  };
 
   // Step 1: Discovery tool - returns list of available resources
   server.addTool({

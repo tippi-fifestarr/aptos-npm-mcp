@@ -37,7 +37,11 @@ export const CreateApiKeyToolScheme = z.object({
       )
       .default([]),
   }),
-  name: z.string().describe("The name of the api key."),
+  name: z
+    .string()
+    .describe(
+      "The name of the api key. Must be between 3 and 32 characters long, with only lowercase letters, numbers, dashes and underscores."
+    ),
   organization_id: z
     .string()
     .describe("The organization id to create the api key for."),
@@ -105,7 +109,11 @@ export const CreateApiResourceApplicationToolScheme = z.object({
     .describe(
       "The name of the application. Must be between 3 and 32 characters long, with only lowercase letters, numbers, dashes and underscores."
     ),
-  network: z.string().describe("The network to create the application for."),
+  network: z
+    .string()
+    .describe(
+      "The network to create the application for. Can be devnet, testnet or mainnet."
+    ),
   organization_id: z
     .string()
     .describe("The organization id to create the application for."),
@@ -113,6 +121,27 @@ export const CreateApiResourceApplicationToolScheme = z.object({
     .string()
     .describe("The project id to create the application for."),
 });
+
+export const CreateGasStationApplicationToolScheme =
+  CreateApiResourceApplicationToolScheme.omit({ network: true })
+    .merge(CreateApiKeyToolScheme.omit({ application_id: true, name: true }))
+    .extend({
+      network: z
+        .enum(["testnet", "mainnet"])
+        .describe(
+          "The network to create the gas station application for. Can only be testnet or mainnet."
+        ),
+      api_key_name: z
+        .string()
+        .describe(
+          "The name of the api key to create the gas station for. This is the name of the api key that will be created for the gas station. Must be between 3 and 32 characters long, with only lowercase letters, numbers, dashes and underscores."
+        ),
+      functions: z
+        .array(z.string())
+        .describe(
+          "A list of functions the gas station will sponsor. Each function should be in the format of <module_address>::<module_name>::<function_name>."
+        ),
+    });
 
 export const CreateProjectToolScheme = z.object({
   description: z.string().describe("The description of the project."),
