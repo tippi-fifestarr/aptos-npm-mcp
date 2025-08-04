@@ -1,6 +1,6 @@
 # Local development with the Aptos MCP
 
-To get started, clone the repository and
+To get started, clone the repository and then navigate into the folder `aptos-npm-mcp`
 
 ```bash
 git clone git@github.com:aptos-labs/aptos-npm-mcp.git
