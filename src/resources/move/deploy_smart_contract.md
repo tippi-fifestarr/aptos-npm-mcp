@@ -20,6 +20,8 @@ aptos 7.2.0
 aptos init --network <dapp_network>
 ```
 
+2a. Make sure the account is funded following the [how_to_fund_an_account_on_aptos guide](../management/how_to_fund_an_account_on_aptos.md)
+
 ### Compiling
 
 Compile the Move package to make sure all works

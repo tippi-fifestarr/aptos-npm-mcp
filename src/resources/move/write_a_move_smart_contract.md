@@ -46,6 +46,12 @@ The following doc outlines the best practices and guidelines to follow when writ
   // Initialize timestamp for testing
   timestamp::set_time_has_started_for_testing(aptos_framework);
   ```
+- ALWAYS put the `#[test]` annotation about the function comments
+  ```rust
+  #[test]
+  /// Comment
+  fun xyz()...
+  ```
 
 ### Error Codes
 

@@ -23,7 +23,11 @@ It is structured to enforce user validation steps before applying any modificati
 - Associated Network
 - Project/Application Name
 
+2a. API keys have 2 types, an API key starting with `aptoslabs_` which is meant to be used in a server project, and an API key starting with `AG_` which is meant to be used in a frontend application. Display the existing API keys depending on the project type the user is building.
+
 4. If no Api resource applications, help the user to create a new Api resource application.
+
+4a. Make sure to create the new Api resource application in an existing organization.
 
 5. If no API keys exist, help the user to create a new API Key
 
@@ -73,7 +77,7 @@ const aptos = new Aptos(
   new AptosConfig({
     network: NETWORK,
     clientConfig: { API_KEY: APTOS_API_KEY },
-  }),
+  })
 );
 ```
 

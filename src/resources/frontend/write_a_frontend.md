@@ -1,3 +1,5 @@
+# How to write a frontend for an Aptos dApp
+
 🧱 Canonical Dapp Template
 Use this template as the starting point for any frontend dapp scaffolding task. Clone this repository in the root project instead of creating from scratch:
 
@@ -31,3 +33,10 @@ After cloning:
 
 ❌ Do not hand-write package.json
 ❌ Do not scaffold from npx create-react-app or older tooling
+
+## Accoutn address validation
+
+- To validate if an account address is valid, use the `AccountAddress` from the `@aptos-labs/ts-sdk`
+  ```ts
+  const isAccountValid = AccountAddress.isValid(accountAddress);
+  ```

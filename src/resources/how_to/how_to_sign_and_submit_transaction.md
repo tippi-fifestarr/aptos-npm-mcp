@@ -56,3 +56,5 @@ const SignAndSubmit = () => {
 
 export default SignAndSubmit;
 ```
+
+- ALWAYS use the functions from `useWallet()` when trying to submit a transaction.
