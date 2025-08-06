@@ -7,7 +7,7 @@ npm install -g @anthropic-ai/claude-code
 ```
 
 2. Obtain your `APTOS_BOT_KEY`:
-   - Visit the [Aptos Developer Portal](https://aptos.dev) and log in with your account
+   - Visit the [Aptos Developer Portal](https://build.aptoslabs.com/) and log in with your account
    - Navigate to the API Keys section and create a new key
    - Copy the generated key for use in the next step
 
