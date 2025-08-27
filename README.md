@@ -1,8 +1,10 @@
 # Aptos NPM MCP
 
-## Prerequisite
+## Prerequisites
 
-- [node and npm](https://nodejs.org/en) (npm ≥ 5.2.0)
+- **Node.js 20+ and npm** (npm ≥ 5.2.0)
+  - Check your versions: `node --version && npm --version`
+  - Need to upgrade? Install [nvm](https://github.com/nvm-sh/nvm) and run `nvm install 20`
 - Build Bot Api Key
 
 ### Generate a `Build Bot Api Key`

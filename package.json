@@ -23,6 +23,10 @@
   "author": "aptoslabs.com",
   "type": "module",
   "description": "A MCP server for Aptos NPM packages",
+  "engines": {
+    "node": ">=20.0.0",
+    "npm": ">=5.2.0"
+  },
   "files": [
     "dist",
     "package.json"
